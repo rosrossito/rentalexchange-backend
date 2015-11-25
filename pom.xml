@@ -8,8 +8,12 @@
     <packaging>pom</packaging>
 
     <version>0.0.1-SNAPSHOT</version>
+    <name>Parent-Rental-Exchange</name>
+
     <modules>
         <module>auth-re</module>
+        <module>core-re</module>
+        <module>app-re</module>
     </modules>
 
     <!-- Inherit defaults from Spring Boot -->
@@ -27,13 +31,5 @@
         </dependency>
     </dependencies>
 
-    <!-- Package as an executable jar -->
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>

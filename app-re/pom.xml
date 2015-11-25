@@ -9,15 +9,25 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>auth-re</artifactId>
-    <name>Auth-Rental-Exchange</name>
+    <artifactId>application</artifactId>
+    <name>Application</name>
 
     <dependencies>
         <dependency>
             <groupId>com.upteam</groupId>
-            <artifactId>core-re</artifactId>
+            <artifactId>auth-re</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <!-- Package as an executable jar -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

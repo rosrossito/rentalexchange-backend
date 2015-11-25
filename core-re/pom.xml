@@ -8,16 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>auth-re</artifactId>
-    <name>Auth-Rental-Exchange</name>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.upteam</groupId>
-            <artifactId>core-re</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+    <artifactId>core-re</artifactId>
+    <name>Core-Rental-Exchange</name>
 
 </project>
