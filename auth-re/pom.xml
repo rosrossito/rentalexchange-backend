@@ -19,4 +19,22 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>deployDBSchema</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
+                        <configuration>
+                            <defaultSchemaName>uas</defaultSchemaName>
+                            <changeLogFile>src/main/liquibase/deploy-schema.xml</changeLogFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
