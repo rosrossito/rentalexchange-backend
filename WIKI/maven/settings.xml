@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <profiles>
+        <profile>
+            <id>liquibaseProps</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <dataSource.project.driverClass>org.postgresql.Driver</dataSource.project.driverClass>
+                <dataSource.project.jdbcURL>jdbc:postgresql://localhost:5432</dataSource.project.jdbcURL>
+                <dataSource.project.user>postgres</dataSource.project.user>
+                <dataSource.project.password>qa1234</dataSource.project.password>
+            </properties>
+        </profile>
+    </profiles>
+
+</settings>
