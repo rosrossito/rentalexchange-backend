@@ -1,6 +1,7 @@
 package com.upteam.auth.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * Created by opasichnyk on 11/25/2015.
