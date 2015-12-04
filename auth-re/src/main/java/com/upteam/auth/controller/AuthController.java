@@ -17,6 +17,7 @@ public class AuthController {
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     String userRegistration(@RequestBody RegistrationRequestVO request) {
+        //TODO REN-31
         return "User - registrated!" + request.getEmail();
     }
 

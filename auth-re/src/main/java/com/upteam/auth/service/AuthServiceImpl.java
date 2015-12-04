@@ -8,4 +8,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    @Override
+    public void registration() {
+        //TODO REN-21 Посетитель: Я хочу зарегистрироваться на сайте.REN-31
+    }
 }
