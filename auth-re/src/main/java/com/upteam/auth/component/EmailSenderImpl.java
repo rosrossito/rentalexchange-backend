@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EmailSenderImpl implements EmailSender {
-    @Override
-    public void sendEmail() {
 
+    @Override
+    public void sendEmail(EmailGenerator emailGenerator) {
+       //TODO REN-29 [BackEnd] Отправка Емэла с ссылкой для подтверждения регистрации>Andrey
     }
 }
