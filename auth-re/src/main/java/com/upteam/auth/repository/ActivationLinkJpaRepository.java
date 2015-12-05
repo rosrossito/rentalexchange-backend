@@ -1,7 +1,6 @@
 package com.upteam.auth.repository;
 
 import com.upteam.auth.domain.ActivationLink;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -36,6 +35,18 @@ public class ActivationLinkJpaRepository implements ActivationLinkRepository {
     @Override
     public ActivationLink getLinkByUUID(String uuid) {
         //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
+        return null;
+    }
+
+    @Override
+    public Long getSystemUserIDbyUUID(String uuid) {
+        //ADD by Kostik
+        return null;
+    }
+
+    @Override
+    public Long getActivationLinkIDbyUUID(String uuid) {
+        //ADD bu Kostik
         return null;
     }
 }

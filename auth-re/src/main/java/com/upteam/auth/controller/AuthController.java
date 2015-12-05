@@ -1,6 +1,5 @@
 package com.upteam.auth.controller;
 
-import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
@@ -25,6 +24,10 @@ public class AuthController {
     @ResponseBody
     void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request) {
         // TODO REN-32 [BackEnd] REST для подтверждения регистрации c отправкой писем >Kostik
+        if (request.getUuid() != null) {
+            authService.confirmRegistration(request);
+        }
+        else System.out.println("Bad UUID");
     }
 
 }
