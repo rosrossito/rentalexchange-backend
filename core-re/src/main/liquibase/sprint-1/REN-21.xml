@@ -29,4 +29,25 @@
         </createTable>
         <createSequence sequenceName="SystemUser_SEQ"/>
     </changeSet>
+
+    <changeSet id="05122015-02" author="ros">
+        <comment>Create table for store activation history</comment>
+        <createTable tableName="ActivationLink">
+        <column name="ID" type="bigint">
+            <constraints nullable="false" primaryKey="true"/>
+        </column>
+            <column name="LINKUUID" type="varchar(64)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="SYSTEMUSER_ID" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="TYPE" type="varchar(64)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="ActivationLink_SEQ"/>
+    </changeSet>
+
+
 </databaseChangeLog>
