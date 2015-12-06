@@ -8,21 +8,27 @@
     <changeSet id="29112015-01" author="opasechnik">
         <comment>Create table for store System User information</comment>
         <createTable tableName="SystemUser">
+            <comment>Create column for user id</comment>
             <column name="ID" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+            <comment>Create column for login entered by user</comment>
             <column name="LOGIN" type="varchar(64)">
                 <constraints nullable="true"/>
             </column>
+            <comment>Create column for password entered by user</comment>
             <column name="PASSWORD" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
+            <comment>Create column for user email</comment>
             <column name="EMAIL" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
+            <comment>Create column for image</comment>
             <column name="IMAGE" type="varchar(600)">
                 <constraints nullable="true"/>
             </column>
+            <comment>Create column for status: temporary, active, blocked or deleted</comment>
             <column name="STATUS" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
@@ -30,24 +36,32 @@
         <createSequence sequenceName="SystemUser_SEQ"/>
     </changeSet>
 
-    <changeSet id="05122015-02" author="ros">
+    <changeSet id="05122015-02" author="romelchenko">
         <comment>Create table for store activation history</comment>
         <createTable tableName="ActivationLink">
-        <column name="ID" type="bigint">
-            <constraints nullable="false" primaryKey="true"/>
-        </column>
-            <column name="LINKUUID" type="varchar(64)">
+            <comment>Create column for link id</comment>
+            <column name="ID" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <comment>Create column for link UUID</comment>
+            <column name="UUID" type="varchar(64)">
                 <constraints nullable="true"/>
             </column>
-            <column name="SYSTEMUSER_ID" type="bigint">
-                <constraints nullable="true"/>
-            </column>
+            <comment>Create column for link type: confirmRegistration, restorePassword</comment>
             <column name="TYPE" type="varchar(64)">
                 <constraints nullable="true"/>
             </column>
+            <column name="SYSTEMUSER_ID" type="bigint">
+                <constraints nullable="true" unique="true"/>
+            </column>
         </createTable>
+        <addForeignKeyConstraint constraintName="ActivationLink_SystemUser_FK"
+                                 referencedTableName="SystemUser"
+                                 referencedColumnNames="ID"
+                                 baseColumnNames="SYSTEMUSER_ID"
+                                 baseTableName="ActivationLink"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"/>
         <createSequence sequenceName="ActivationLink_SEQ"/>
     </changeSet>
-
-
 </databaseChangeLog>
