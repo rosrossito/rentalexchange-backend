@@ -34,4 +34,8 @@ public class SystemUserJpaRepository implements SystemUserRepository{
     }
 
 
+    @Override
+    public SystemUser searchByEmail(String eMail) {
+        return null;
+    }
 }

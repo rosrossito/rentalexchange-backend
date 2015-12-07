@@ -18,6 +18,7 @@ public class AuthController {
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     void userRegistration(@RequestBody RegistrationRequestVO request) {
         //TODO REN-31 [BackEnd] REST для регистрации >Vlad
+        authService.registration(request);
     }
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)
