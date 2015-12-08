@@ -8,6 +8,7 @@ import javax.persistence.*;
 //Entity
 
 @Entity
+@Table(schema = "public", name = "Systemuser")
 public class SystemUser {
 
 @Id
