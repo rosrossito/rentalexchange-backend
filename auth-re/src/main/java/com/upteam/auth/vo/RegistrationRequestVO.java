@@ -11,6 +11,39 @@ public class RegistrationRequestVO {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("login")
+    private String login;
+
+    @JsonProperty("password")
+    private String password;
+
+    @JsonProperty("image")
+    private String image;
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getEmail() {
         return email;
     }
