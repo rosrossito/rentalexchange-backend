@@ -2,6 +2,7 @@ package com.upteam.auth.service;
 
 import com.upteam.auth.component.EmailGenerator;
 import com.upteam.auth.component.EmailSender;
+import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
@@ -9,6 +10,8 @@ import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -36,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
             SystemUser systemUser = new SystemUser();
             systemUserRepository.create(systemUser);
             emailSender.sendEmail(generator);
-            
+
         } else {
             System.out.println("User already exist");
         }
@@ -45,5 +48,33 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
         // TODO REN-32 [BackEnd] REST для подтверждения регистрации c отправкой писем >Kostik
+
+        ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
+        final SystemUser user;
+        if (link != null) {
+            user = systemUserRepository.getById(link.getSystemuser_id());
+            user.setPassword(request.getPassword());
+            //user.setStatusSystemUser(SystemUser.status.active);
+            systemUserRepository.update(user);
+            emailSender.sendEmail(new EmailGenerator() {
+                @Override
+                public List<String> getEmailsTo() {
+                    List<String> mailsTo = null;
+                    mailsTo.add(user.getEmail());
+                    return mailsTo;
+                }
+
+                @Override
+                public String getSubject() {
+                    return "Confirm Registration";
+                }
+
+                @Override
+                public String getText() {
+                    return "Your registration confirm!\nYour login: "+user.getLogin()+"; your password: "+user.getPassword();
+                }
+            });
+            activationLinkRepository.delete(link.getId());
+        } else System.out.println("Link wasn't found!!!");
     }
 }

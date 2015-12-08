@@ -38,15 +38,5 @@ public class ActivationLinkJpaRepository implements ActivationLinkRepository {
         return null;
     }
 
-    @Override
-    public Long getSystemUserIDbyUUID(String uuid) {
-        //ADD by Kostik
-        return null;
-    }
 
-    @Override
-    public Long getActivationLinkIDbyUUID(String uuid) {
-        //ADD bu Kostik
-        return null;
-    }
 }
