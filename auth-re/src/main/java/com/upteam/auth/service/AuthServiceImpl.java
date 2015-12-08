@@ -82,9 +82,9 @@ public class AuthServiceImpl implements AuthService {
                 }
             });
             activationLinkRepository.delete(link.getId());
-        } else System.out.println("Link wasn't found!!!");
+        } else System.out.println("Liфавфвафвыавыфпаыфвпафв!!!");
         Long systemUserId = activationLinkRepository.getSystemUserIDbyUUID(request.getUuid());
-        Long activationLinkId = activationLinkRepository.getActivationLinkIDbyUUID(request.getUuid());
+        Long activationLinkId = activationLinkRepпtionLinkIDbyUUID(request.getUuid());
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         SystemUser user;
         if (link != null) {
