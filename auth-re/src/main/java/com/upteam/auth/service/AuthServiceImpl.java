@@ -83,18 +83,6 @@ public class AuthServiceImpl implements AuthService {
             });
             activationLinkRepository.delete(link.getId());
         } else System.out.println("88888888!!!");
-        } else System.out.println("77777777!!!");
-        Long systemUserId = activationLinkRepository.getSystemUserIDbyUUID(request.getUuid());
-        Long activationLinkId = activationLinkRepпtionLinkIDbyUUID(request.getUuid());
-        ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
-        SystemUser user;
-        if (link != null) {
-            user = systemUserRepository.getById(systemUserId);
-            user.setPassword(request.getPassword());
-            //user.setStatusSystemUser(SystemUser.status.active);
-            systemUserRepository.update(user);
-            emailSender.sendEmail(link);
-            activationLinkRepository.delete(activationLinkId);
-        } else System.out.println("Link wasn't found!!!");
+
     }
 }
