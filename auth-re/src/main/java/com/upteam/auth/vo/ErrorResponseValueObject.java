@@ -1,5 +1,7 @@
 package com.upteam.auth.vo;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.time.LocalDate;
 
 /**
@@ -7,7 +9,9 @@ import java.time.LocalDate;
  */
 public class ErrorResponseValueObject {
 
+    @JsonProperty("timestamp")
     private String reason;
+    @JsonProperty("reason")
     private LocalDate timeStamp;
 
     public String getReason() {
