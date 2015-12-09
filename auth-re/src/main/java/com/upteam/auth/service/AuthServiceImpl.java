@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
             user.setPassword(request.getPassword());
             //user.setStatusSystemUser(SystemUser.status.active);
             systemUserRepository.update(user);
-            emailSender.sendEmail(new EmailGenerator() {
+           /* emailSender.sendEmail(new EmailGenerator() {
                 @Override
                 public List<String> getEmailsTo() {
                     List<String> mailsTo = null;
@@ -80,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
                 public String getText() {
                     return "Your registration confirm!\nYour login: "+user.getLogin()+"; your password: "+user.getPassword();
                 }
-            });
+            });*/
             activationLinkRepository.delete(link.getId());
         } else System.out.println("88888888!!!");
 

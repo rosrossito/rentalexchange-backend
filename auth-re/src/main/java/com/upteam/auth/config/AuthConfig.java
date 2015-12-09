@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Import;
 @Import({RepositoryConfig.class,
         ServiceConfig.class,
         WebConfig.class,
-        ComponenConfig.class})
+        ComponenConfig.class,
+        EmailConfig.class
+})
 public class AuthConfig {
 
 }

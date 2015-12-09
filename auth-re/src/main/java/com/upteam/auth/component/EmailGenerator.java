@@ -13,4 +13,6 @@ public interface EmailGenerator {
 
     String getText();
 
+    String getFrom();
+
 }
