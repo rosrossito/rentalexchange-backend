@@ -12,12 +12,6 @@
     <name>Core-Rental-Exchange</name>
     <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-    </dependencies>
 
     <profiles>
         <profile>
@@ -66,9 +60,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
     </dependencies>
-
-
-
 
 </project>
