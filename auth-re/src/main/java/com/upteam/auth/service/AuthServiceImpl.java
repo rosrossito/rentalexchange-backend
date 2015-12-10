@@ -6,6 +6,7 @@ import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.Status;
 import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
+import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
@@ -31,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private EmailGenerator generator;
 
     @Override
-    public void registration(RegistrationRequestVO request) {
+    public void registration(RegistrationRequestVO request) throws UserAlreadyExistException {
         //TODO REN-31 [BackEnd] REST для регистрации >Vlad
 
         if (systemUserRepository.searchByEmail(request.getEmail()) == null) {
@@ -42,13 +43,13 @@ public class AuthServiceImpl implements AuthService {
             systemUser.setLogin(request.getLogin());
             systemUser.setPassword(request.getPassword());
             systemUser.setImage(request.getImage());
-            //systemUser.setStatus(temporary);
+            systemUser.setStatus(Status.temporary);
 
             systemUserRepository.create(systemUser);
             emailSender.sendEmail(generator);
 
         } else {
-            System.out.println("User already exist");
+            throw new UserAlreadyExistException();
         }
     }
 

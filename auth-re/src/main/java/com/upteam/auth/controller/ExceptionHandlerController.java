@@ -1,6 +1,7 @@
 package com.upteam.auth.controller;
 
 import com.upteam.auth.exception.CustomException;
+import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.vo.ErrorResponseValueObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,6 +25,14 @@ public class ExceptionHandlerController {
         responseValueObject.setReason(e.getMessage());
         responseValueObject.setTimeStamp(LocalDate.now());
         return responseValueObject;
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ErrorResponseValueObject userAreadyExist(UserAlreadyExistException e) {
+        ErrorResponseValueObject responseValueObject = new ErrorResponseValueObject();
+        responseValueObject.setReason(e.getMessage());
+        responseValueObject.setTimeStamp(LocalDate.now());
+        return null;
     }
 
 }

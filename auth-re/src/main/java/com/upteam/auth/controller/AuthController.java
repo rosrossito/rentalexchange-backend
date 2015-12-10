@@ -1,6 +1,7 @@
 package com.upteam.auth.controller;
 
 import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
+import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
@@ -22,7 +23,7 @@ public class AuthController {
     JavaMailSenderImpl javaMailSender;
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-    void userRegistration(@RequestBody RegistrationRequestVO request) {
+    void userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
         //TODO REN-31 [BackEnd] REST для регистрации >Vlad
         authService.registration(request);
     }
