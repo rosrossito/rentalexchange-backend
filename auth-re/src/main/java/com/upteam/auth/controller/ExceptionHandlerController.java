@@ -25,10 +25,12 @@ public class ExceptionHandlerController {
         ErrorResponseValueObject responseValueObject = new ErrorResponseValueObject();
         responseValueObject.setReason(e.getMessage());
         responseValueObject.setTimeStamp(LocalDate.now());
+
         return responseValueObject;
     }
 
     @ExceptionHandler(InvalidConfirmRegistrationLinkException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponseValueObject invalidConfirmRegistrationLink(InvalidConfirmRegistrationLinkException e) {
         ErrorResponseValueObject responseValueObject = new ErrorResponseValueObject();
@@ -38,11 +40,13 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
     public ErrorResponseValueObject userAreadyExist(UserAlreadyExistException e) {
         ErrorResponseValueObject responseValueObject = new ErrorResponseValueObject();
         responseValueObject.setReason(e.getMessage());
         responseValueObject.setTimeStamp(LocalDate.now());
-        return null;
+        return responseValueObject;
     }
 
 }
