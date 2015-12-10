@@ -9,9 +9,10 @@ import java.time.LocalDate;
  */
 public class ErrorResponseValueObject {
 
-    @JsonProperty("timestamp")
-    private String reason;
     @JsonProperty("reason")
+    private String reason;
+
+    @JsonProperty("timestamp")
     private LocalDate timeStamp;
 
     public String getReason() {
