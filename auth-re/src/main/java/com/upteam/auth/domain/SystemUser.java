@@ -11,15 +11,17 @@ import javax.persistence.*;
 @Table(schema = "public", name = "Systemuser")
 public class SystemUser {
 
-@Id
-@GeneratedValue
-private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-String login;
-String email;
-String image;
-enum status {temporary, active, blocked, delete};
-String password;
+    String login;
+    String email;
+    String image;
+
+
+    private Status status;
+    String password;
 
     public SystemUser() {
     }
@@ -62,5 +64,13 @@ String password;
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

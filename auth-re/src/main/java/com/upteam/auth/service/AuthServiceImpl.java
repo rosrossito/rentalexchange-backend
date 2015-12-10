@@ -3,15 +3,15 @@ package com.upteam.auth.service;
 import com.upteam.auth.component.EmailGenerator;
 import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.domain.ActivationLink;
+import com.upteam.auth.domain.Status;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -46,43 +46,26 @@ public class AuthServiceImpl implements AuthService {
 
             systemUserRepository.create(systemUser);
             emailSender.sendEmail(generator);
-            
+
         } else {
             System.out.println("User already exist");
         }
     }
 
     @Override
-    public void confirmRegistration(RegistrationConfirmRequestVO request) {
+    public void confirmRegistration(RegistrationConfirmRequestVO request) throws InvalidConfirmRegistrationLinkException {
         // TODO REN-32 [BackEnd] REST для подтверждения регистрации c отправкой писем >Kostik
-
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
-        final SystemUser user;
-        if (link != null) {
-            user = systemUserRepository.getById(link.getSystemuser_id());
+        SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
+        if (link != null && user.getStatus() == Status.temporary) {
             user.setPassword(request.getPassword());
-            //user.setStatusSystemUser(SystemUser.status.active);
+            user.setStatus(Status.active);
             systemUserRepository.update(user);
-           /* emailSender.sendEmail(new EmailGenerator() {
-                @Override
-                public List<String> getEmailsTo() {
-                    List<String> mailsTo = null;
-                    mailsTo.add(user.getEmail());
-                    return mailsTo;
-                }
-
-                @Override
-                public String getSubject() {
-                    return "Confirm Registration";
-                }
-
-                @Override
-                public String getText() {
-                    return "Your registration confirm!\nYour login: "+user.getLogin()+"; your password: "+user.getPassword();
-                }
-            });*/
+            emailSender.sendEmail(generator);
             activationLinkRepository.delete(link.getId());
-        } else System.out.println("88888888!!!");
+        } else {
+            throw new InvalidConfirmRegistrationLinkException();
+        }
 
     }
 }
