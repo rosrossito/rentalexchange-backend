@@ -1,5 +1,9 @@
 package com.upteam.auth.controller;
 
+import com.upteam.auth.component.EmailGenerator;
+import com.upteam.auth.component.EmailGeneratorImpl;
+import com.upteam.auth.component.EmailSender;
+import com.upteam.auth.component.EmailSenderImpl;
 import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
@@ -9,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -41,9 +47,22 @@ public class AuthController {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("Test");
         message.setText("TestText");
-        message.setTo("opasichnyk@eisgroup.com");
+        message.setTo("andrewkarnaukhow@gmail.com");
         message.setFrom("exchange.rental.info@gmail.com");
         javaMailSender.send(message);
     }
+    //created by akarnaukhow
+    @RequestMapping(value = "/mailtest", method = RequestMethod.GET)
+    void sendTestEmail(){
+        EmailGenerator mail = new EmailGeneratorImpl(new ArrayList<String>()
+            {{add("andrewkarnaukhow@gmail.com");add("rentalexchange.t@gmail.com");}},
+                "test subject",
+                "test text",
+                "test to");
+        EmailSender sender = new EmailSenderImpl();
+        sender.sendEmail(mail);
+    }
+
+
 
 }
