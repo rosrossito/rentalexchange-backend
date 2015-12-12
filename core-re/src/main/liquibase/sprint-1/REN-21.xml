@@ -8,28 +8,22 @@
     <changeSet id="29112015-01" author="opasechnik">
         <comment>Create table for store System User information</comment>
         <createTable tableName="SystemUser">
-            <comment>Create column for user Id</comment>
-            <column name="ID" type="bigint">
+            <column name="ID" type="bigint" remarks="Create column for user Id">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <comment>Create column for login entered by user</comment>
-            <column name="LOGIN" type="varchar(64)">
+            <column name="LOGIN" type="varchar(64)" remarks="Create column for login entered by user">
                 <constraints nullable="true"/>
             </column>
-            <comment>Create column for password entered by user</comment>
-            <column name="PASSWORD" type="varchar(64)">
+            <column name="PASSWORD" type="varchar(64)" remarks="Create column for password entered by user">
                 <constraints nullable="false"/>
             </column>
-            <comment>Create column for user email</comment>
-            <column name="EMAIL" type="varchar(64)">
+            <column name="EMAIL" type="varchar(64)" remarks="Create column for user email">
                 <constraints nullable="false"/>
             </column>
-            <comment>Create column for image</comment>
-            <column name="IMAGE" type="varchar(600)">
+            <column name="IMAGE" type="varchar(600)" remarks="Create column for image">
                 <constraints nullable="true"/>
             </column>
-            <comment>Create column for status: temporary, active, blocked or deleted</comment>
-            <column name="STATUS" type="varchar(64)">
+            <column name="STATUS" type="varchar(64)" remarks="Create column for status: temporary, active, blocked or deleted">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -39,20 +33,16 @@
     <changeSet id="05122015-02" author="romelchenko">
         <comment>Create table for store activation history</comment>
         <createTable tableName="ActivationLink">
-            <comment>Create column for link Id</comment>
-            <column name="ID" type="bigint">
+            <column name="ID" type="bigint" remarks="Create column for link Id">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <comment>Create column for link UUID</comment>
-            <column name="UUID" type="varchar(64)">
+            <column name="UUID" type="varchar(64)" remarks="Create column for link UUID">
                 <constraints nullable="true"/>
             </column>
-            <comment>Create column for link type: confirmRegistration, restorePassword</comment>
-            <column name="TYPE" type="varchar(64)">
+            <column name="TYPE" type="varchar(64)" remarks="Create column for link type: confirmRegistration, restorePassword">
                 <constraints nullable="true"/>
             </column>
-            <comment>Create column for user Id</comment>
-            <column name="SYSTEMUSER_ID" type="bigint">
+            <column name="SYSTEMUSER_ID" type="bigint" remarks="Create column for user Id">
                 <constraints nullable="true" unique="true"/>
             </column>
         </createTable>
