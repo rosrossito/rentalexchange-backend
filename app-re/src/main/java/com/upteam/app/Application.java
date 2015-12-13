@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @EnableAutoConfiguration
 @Import({AuthConfig.class})
-@EntityScan(basePackageClasses= SystemUser.class)
 public class Application {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);

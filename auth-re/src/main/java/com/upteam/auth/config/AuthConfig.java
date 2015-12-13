@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
         ServiceConfig.class,
         WebConfig.class,
         ComponenConfig.class,
-        EmailConfig.class
+        EmailConfig.class, PersistanceConfig.class
 })
 public class AuthConfig {
 

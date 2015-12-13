@@ -6,20 +6,24 @@ import javax.persistence.*;
  * Created by opasichnyk on 11/25/2015.
  */
 //Entity
+@NamedQuery(name="systemUser.findByMail", query = "select u from SystemUser u where u.email = :email")
 
 @Entity
-@Table(schema = "public", name = "Systemuser")
+@Table(schema = "rental", name = "systemuser")
 public class SystemUser {
 
     @Id
-    @GeneratedValue
+//    @SequenceGenerator(name = "systemuser_seq",schema = "rental", sequenceName = "systemuser_seq", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuser_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     String login;
     String email;
     String image;
 
-
+    @Enumerated(EnumType.STRING)
     private Status status;
     String password;
 
@@ -73,4 +77,5 @@ public class SystemUser {
     public void setStatus(Status status) {
         this.status = status;
     }
+
 }
