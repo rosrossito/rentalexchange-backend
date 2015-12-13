@@ -5,16 +5,27 @@ import javax.persistence.*;
 /**
  * Created by opasichnyk on 12/4/2015.
  */
-//Entity
+@NamedQuery(name="ActivationLink.findByUUID", query = "select u from ActivationLink u where u.linkUUID = :uuid")
+
+@Entity
+@Table(schema = "rental", name = "activationlink")
 public class ActivationLink {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "uuid")
     String linkUUID;
+
+    @Column(name = "systemuser_id")
     long systemuser_id;
-    enum type {confirmRegistration, restorePassword};
+
+    public static enum Type {confirmRegistration, restorePassword};
+    @Column(name = "Type")
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     public ActivationLink() {
     }
@@ -42,4 +53,14 @@ public class ActivationLink {
     public void setSystemuser_id(long systemuser_id) {
         this.systemuser_id = systemuser_id;
     }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
 }
+

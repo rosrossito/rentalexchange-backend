@@ -1,41 +1,63 @@
 package com.upteam.auth.repository;
 
 import com.upteam.auth.domain.ActivationLink;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.*;
 
 /**
  * Created by olegls2000 on 12/4/2015.
  */
+
+
 @Repository
+@Transactional
 public class ActivationLinkJpaRepository implements ActivationLinkRepository {
+
+    @PersistenceContext
+    @Autowired
+    private EntityManager em;
 
     @Override
     public ActivationLink create(ActivationLink entity) {
         //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
-        return null;
+        em.persist(entity);
+        return entity;
     }
 
     @Override
     public ActivationLink getById(Long id) {
         //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
-        return null;
+        return em.find(ActivationLink.class, id);
     }
 
     @Override
     public void delete(Long id) {
         //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
+        ActivationLink al = getById(id);
+        if (al!=null) em.remove(al);
     }
 
     @Override
     public ActivationLink update(ActivationLink entity) {
         //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
-        return null;
+        return em.merge(entity);
     }
 
     @Override
     public ActivationLink getLinkByUUID(String uuid) {
         //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
-        return null;
+        ActivationLink result;
+        TypedQuery<ActivationLink> q = em.createNamedQuery("ActivationLink.findByUUID", ActivationLink.class);
+        q.setParameter("uuid", uuid);
+        try {
+            result = q.getSingleResult();
+        } catch (NoResultException e) {
+            result = null;
+        }
+        return result;
     }
 
 

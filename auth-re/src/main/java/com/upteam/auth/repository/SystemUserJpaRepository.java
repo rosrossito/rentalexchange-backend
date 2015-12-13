@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by opasichnyk on 11/25/2015.
  */
 @Repository
+@Transactional
 public class SystemUserJpaRepository implements SystemUserRepository{
 
     @PersistenceContext

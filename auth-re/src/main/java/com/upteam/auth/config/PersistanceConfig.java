@@ -29,7 +29,8 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EntityScan(basePackageClasses= SystemUser.class)
+@EntityScan(basePackages = "com.upteam.auth.domain")
+@EnableTransactionManagement
 public class PersistanceConfig {
 
 
