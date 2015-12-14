@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Skirdovs on 10.12.2015.
  */
-public class InvalidConfirmRegistrationLinkException extends Exception {
+public class InvalidConfirmRegistrationLinkException extends RuntimeException {
     private String message;
 
 

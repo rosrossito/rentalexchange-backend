@@ -38,7 +38,7 @@ public class AuthController {
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)
     @ResponseBody
-    void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request) throws InvalidConfirmRegistrationLinkException {
+    void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request)  {
         // TODO REN-32 [BackEnd] REST для подтверждения регистрации c отправкой писем >Kostik
         authService.confirmRegistration(request);
     }
