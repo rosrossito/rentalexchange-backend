@@ -9,7 +9,7 @@
             </activation>
             <properties>
                 <dataSource.project.driverClass>org.postgresql.Driver</dataSource.project.driverClass>
-                <dataSource.project.jdbcURL>jdbc:postgresql://localhost:5432</dataSource.project.jdbcURL>
+                <dataSource.project.jdbcURL>jdbc:postgresql://localhost:5432/rental</dataSource.project.jdbcURL>
                 <dataSource.project.user>postgres</dataSource.project.user>
                 <dataSource.project.password>qa1234</dataSource.project.password>
             </properties>

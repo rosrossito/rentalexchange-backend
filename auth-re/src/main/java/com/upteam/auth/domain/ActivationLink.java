@@ -1,8 +1,5 @@
 package com.upteam.auth.domain;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.persistence.*;
 
 /**
@@ -64,10 +61,5 @@ public class ActivationLink {
     public void setType(Type type) {
         this.type = type;
     }
-
-
-    // Define the logger object for this class
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
 }
 

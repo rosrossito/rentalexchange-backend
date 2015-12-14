@@ -23,11 +23,10 @@
                         <artifactId>liquibase-maven-plugin</artifactId>
                         <version>3.4.1</version>
                         <configuration>
-                           <!-- <defaultSchemaName>auth</defaultSchemaName>-->
-                            <driver>org.postgresql.Driver</driver>
-                            <url>jdbc:postgresql://localhost:5432</url>
-                            <username>postgres</username>
-                            <password>qa1234</password>
+                            <driver>${dataSource.project.driverClass}</driver>
+                            <url>${dataSource.project.jdbcURL}</url>
+                            <username>${dataSource.project.user}</username>
+                            <password>${dataSource.project.password}</password>
                             <defaultSchemaName>rental</defaultSchemaName>
                             <changeLogFile>src/main/liquibase/deploy-schema.xml</changeLogFile>
                         </configuration>

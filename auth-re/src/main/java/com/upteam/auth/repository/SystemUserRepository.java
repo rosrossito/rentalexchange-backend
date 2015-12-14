@@ -1,6 +1,5 @@
 package com.upteam.auth.repository;
 
-import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.SystemUser;
 
 /**

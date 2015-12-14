@@ -1,0 +1,3 @@
+CREATE DATABASE rental;
+
+CREATE SCHEMA rental;

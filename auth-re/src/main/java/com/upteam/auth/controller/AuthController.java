@@ -4,7 +4,6 @@ import com.upteam.auth.component.EmailGenerator;
 import com.upteam.auth.component.EmailGeneratorImpl;
 import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.EmailSenderImpl;
-import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
