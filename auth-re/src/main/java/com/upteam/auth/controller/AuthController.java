@@ -48,7 +48,7 @@ public class AuthController {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("Test");
         message.setText("TestText");
-        message.setTo("andrewkarnaukhow@gmail.com");
+        message.setTo("pasechnik.o.n@gmail.com");
         message.setFrom("exchange.rental.info@gmail.com");
         javaMailSender.send(message);
     }

@@ -25,12 +25,12 @@ public class EmailSenderImpl implements EmailSender {
 
     @Autowired
     private JavaMailSenderImpl javaMailSender;
-    private Environment env;
+    //private Environment env;
 
     @Override
     public void sendEmail(EmailGenerator emailGenerator) {
        //TODO REN-29 [BackEnd] Отправка Емэла с ссылкой для подтверждения регистрации>Andrey
-        javaMailSender = javaMailSenderImpl();
+        //javaMailSender = javaMailSenderImpl();
         javaMailSender.send(converter(emailGenerator));
     }
 
@@ -44,7 +44,7 @@ public class EmailSenderImpl implements EmailSender {
         return result;
     }
 
-    private JavaMailSenderImpl javaMailSenderImpl() {
+   /* private JavaMailSenderImpl javaMailSenderImpl() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(env.getProperty("smtp.host"));
         mailSender.setPort(env.getProperty("smtp.port", Integer.class));
@@ -52,6 +52,6 @@ public class EmailSenderImpl implements EmailSender {
         mailSender.setUsername(env.getProperty("smtp.username"));
         mailSender.setPassword(env.getProperty("smtp.password"));
         return mailSender;
-    }
+    }*/
 
 }
