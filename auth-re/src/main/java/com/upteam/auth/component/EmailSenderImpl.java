@@ -1,14 +1,14 @@
 package com.upteam.auth.component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-
-import java.util.ArrayList;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by olegls2000 on 12/4/2015.
@@ -19,6 +19,9 @@ import java.util.ArrayList;
 
 @Component
 public class EmailSenderImpl implements EmailSender {
+
+    // Define the logger object for this class
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private JavaMailSenderImpl javaMailSender;

@@ -1,5 +1,7 @@
 package com.upteam.auth.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -28,4 +30,7 @@ public class EmailConfig {
         prop.put("mail.debug", "true");
         return mailSender;
     }
+    // Define the logger object for this class
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 }

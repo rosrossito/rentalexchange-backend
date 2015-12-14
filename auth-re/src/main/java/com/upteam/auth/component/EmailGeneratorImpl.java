@@ -1,5 +1,8 @@
 package com.upteam.auth.component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -7,6 +10,9 @@ import java.util.List;
  */
 //это класс для теста
 public class EmailGeneratorImpl implements EmailGenerator{
+
+    // Define the logger object for this class
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private List<String> emailsTo;
     private String subject;

@@ -9,6 +9,8 @@ import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -51,11 +53,14 @@ public class AuthController {
         message.setFrom("exchange.rental.info@gmail.com");
         javaMailSender.send(message);
     }
+
     //created by akarnaukhow
     @RequestMapping(value = "/mailtest", method = RequestMethod.GET)
-    void sendTestEmail(){
-        EmailGenerator mail = new EmailGeneratorImpl(new ArrayList<String>()
-            {{add("andrewkarnaukhow@gmail.com");add("rentalexchange.t@gmail.com");}},
+    void sendTestEmail() {
+        EmailGenerator mail = new EmailGeneratorImpl(new ArrayList<String>() {{
+            add("andrewkarnaukhow@gmail.com");
+            add("rentalexchange.t@gmail.com");
+        }},
                 "test subject",
                 "test text",
                 "test to");
@@ -63,6 +68,7 @@ public class AuthController {
         sender.sendEmail(mail);
     }
 
-
+    // Define the logger object for this class
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }

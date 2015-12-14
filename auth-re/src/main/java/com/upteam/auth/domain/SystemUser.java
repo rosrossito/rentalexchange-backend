@@ -1,5 +1,8 @@
 package com.upteam.auth.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 
 /**
@@ -77,5 +80,9 @@ public class SystemUser {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    // Define the logger object for this class
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 
 }

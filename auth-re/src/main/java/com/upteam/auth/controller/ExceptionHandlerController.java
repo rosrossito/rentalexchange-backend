@@ -4,6 +4,8 @@ package com.upteam.auth.controller;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
 import com.upteam.auth.vo.ErrorResponseValueObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,6 +47,7 @@ public class ExceptionHandlerController {
         return responseValueObject;
     }
 
-
+    // Define the logger object for this class
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }
