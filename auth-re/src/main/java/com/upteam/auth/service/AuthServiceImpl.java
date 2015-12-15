@@ -3,6 +3,7 @@ package com.upteam.auth.service;
 import com.upteam.auth.component.EmailGenerator;
 import com.upteam.auth.component.EmailGeneratorImpl;
 import com.upteam.auth.component.EmailSender;
+import com.upteam.auth.component.UserRegistrationEmail;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.Status;
 import com.upteam.auth.domain.SystemUser;
@@ -48,7 +49,10 @@ public class AuthServiceImpl implements AuthService {
             systemUser.setImage(request.getImage());
             systemUser.setStatus(Status.temporary);
             systemUserRepository.create(systemUser);
-            emailSender.sendEmail(generator);
+
+            UserRegistrationEmail userRegistrationEmail = new UserRegistrationEmail(request.getEmail());
+
+            emailSender.sendEmail(userRegistrationEmail);
         } else {
             throw new UserAlreadyExistException();
         }

@@ -15,4 +15,8 @@ public interface EmailGenerator {
 
     String getFrom();
 
+
+
+
+
 }
