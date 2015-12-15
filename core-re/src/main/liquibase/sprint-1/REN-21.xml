@@ -15,7 +15,7 @@
                 <constraints nullable="true"/>
             </column>
             <column name="PASSWORD" type="varchar(64)" remarks="Create column for password entered by user">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="EMAIL" type="varchar(64)" remarks="Create column for user email">
                 <constraints nullable="false"/>
