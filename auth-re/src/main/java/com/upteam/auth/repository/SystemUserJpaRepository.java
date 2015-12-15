@@ -19,37 +19,34 @@ import javax.persistence.TypedQuery;
 @Transactional
 public class SystemUserJpaRepository implements SystemUserRepository{
 
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
     @PersistenceContext
     @Autowired
     private EntityManager em;
 
     @Override
     public SystemUser create(SystemUser entity) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         em.persist(entity);
         return entity;
     }
 
     @Override
     public SystemUser getById(Long id) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         return em.find(SystemUser.class, id);
     }
 
     @Override
     public SystemUser update(SystemUser entity) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         em.merge(entity);
         return entity;
     }
 
     @Override
     public void delete(Long id) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         SystemUser su = getById(id);
         if (su!=null) em.remove(su);
     }
-
 
     @Override
     public SystemUser searchByEmail(String eMail) {
@@ -64,8 +61,5 @@ public class SystemUserJpaRepository implements SystemUserRepository{
         }
         return result;
     }
-
-    // Define the logger object for this class
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }
