@@ -80,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
                             "Для входа в личный кабинет перейдите по <a href=" + link + ">этой ссылке</a>\n" +
                             "(или откройте в интернет-браузере ссылку " + link + ").",
                     "rentalexchange-backend-team");
-            EmailSender sender = new EmailSenderImpl();
+            emailSender = new EmailSenderImpl();
             emailSender.sendEmail(generator);
 
             activationLinkRepository.delete(link.getId());
