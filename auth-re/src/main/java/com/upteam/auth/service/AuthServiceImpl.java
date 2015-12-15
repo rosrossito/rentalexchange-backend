@@ -66,12 +66,12 @@ public class AuthServiceImpl implements AuthService {
                 add("kostik.molodoi@gmail.com");
             }},
                     "Уведомление об активации учётной записи пользователя",
-                    "Тело письма:\n" +
+
                             "Здравствуйте!\n" +
                             " \n" +
                             "Учётная запись пользователя с данным e-mail " + user.getEmail() + " активирована.\n" +
                             " \n" +
-                            "Для входа в личный кабинет перейдите по <a href=" + link + ">этой ссылке</a>\n" +
+                            "Для входа в личный кабинет перейдите по " + link + " этой ссылке\n" +
                             "(или откройте в интернет-браузере ссылку " + link + ").",
                     "rentalexchange-backend-team");
             emailSender.sendEmail(generator);
