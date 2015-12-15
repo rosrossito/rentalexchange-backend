@@ -1,5 +1,7 @@
 package com.upteam.auth.domain;
 
+import org.hibernate.annotations.GeneratorType;
+
 import javax.persistence.*;
 
 /**
@@ -11,7 +13,8 @@ import javax.persistence.*;
 public class SystemUser {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuser_seq")
+    //@SequenceGenerator(name = "systemuser_seq", schema = "rental", sequenceName = "systemuser_seq")
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuser_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
@@ -24,6 +27,7 @@ public class SystemUser {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
     String password;
 
     public SystemUser() {

@@ -12,6 +12,8 @@ import javax.persistence.*;
 public class ActivationLink {
 
     @Id
+    //@SequenceGenerator(name = "activationlink_seq", schema = "rental", sequenceName = "activationlink_seq")
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activationlink_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;

@@ -7,7 +7,7 @@
 
     <changeSet id="29112015-01" author="opasechnik">
         <comment>Create table for store System User information</comment>
-        <createTable tableName="SystemUser">
+        <createTable tableName="systemuser">
             <column name="ID" type="bigint" remarks="Create column for user Id">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -27,12 +27,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="SystemUser_SEQ"/>
+        <createSequence sequenceName="systemuser_seq"/>
     </changeSet>
 
     <changeSet id="05122015-02" author="romelchenko">
         <comment>Create table for store activation history</comment>
-        <createTable tableName="ActivationLink">
+        <createTable tableName="activationlink">
             <column name="ID" type="bigint" remarks="Create column for link Id">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -47,12 +47,12 @@
             </column>
         </createTable>
         <addForeignKeyConstraint constraintName="ActivationLink_SystemUser_FK"
-                                 referencedTableName="SystemUser"
+                                 referencedTableName="systemuser"
                                  referencedColumnNames="ID"
                                  baseColumnNames="SYSTEMUSER_ID"
-                                 baseTableName="ActivationLink"
+                                 baseTableName="activationlink"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"/>
-        <createSequence sequenceName="ActivationLink_SEQ"/>
+        <createSequence sequenceName="activationlink_seq"/>
     </changeSet>
 </databaseChangeLog>
