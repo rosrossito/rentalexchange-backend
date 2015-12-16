@@ -1,22 +1,23 @@
 package com.upteam.auth.domain;
 
-import org.hibernate.annotations.GeneratorType;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * Created by opasichnyk on 11/25/2015.
  */
 @Entity
-@Table(schema = "rental", name = "systemuser")
+@Table(name = "systemuser")
 @NamedQuery(name="systemUser.findByMail", query = "select u from SystemUser u where u.email = :email")
 public class SystemUser {
 
+    @SequenceGenerator(name = "systemuserseq", sequenceName = "systemuser_seq", allocationSize = 1, initialValue = 1)
     @Id
-    //@SequenceGenerator(name = "systemuser_seq", schema = "rental", sequenceName = "systemuser_seq")
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuser_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuserseq")
     private Long id;
 
     String login;

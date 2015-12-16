@@ -8,13 +8,13 @@ import javax.persistence.*;
 @NamedQuery(name="ActivationLink.findByUUID", query = "select u from ActivationLink u where u.linkUUID = :uuid")
 
 @Entity
-@Table(schema = "rental", name = "activationlink")
+@Table(name = "activationlink")
 public class ActivationLink {
 
     @Id
-    //@SequenceGenerator(name = "activationlink_seq", schema = "rental", sequenceName = "activationlink_seq")
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activationlink_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "activationlinkseq", sequenceName = "activationlink_seq", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activationlinkseq")
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
