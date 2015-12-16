@@ -5,7 +5,7 @@ import javax.persistence.*;
 /**
  * Created by opasichnyk on 12/4/2015.
  */
-@NamedQuery(name="ActivationLink.findByUUID", query = "select u from ActivationLink u where u.linkUUID = :uuid")
+@NamedQuery(name="ActivationLink.findByUUID", query = "select u from ActivationLink u where u.uuid = :uuid")
 
 @Entity
 @Table(name = "activationlink")
@@ -19,15 +19,15 @@ public class ActivationLink {
     private Long id;
 
     @Column(name = "uuid")
-    String linkUUID;
+    String uuid;
 
     @Column(name = "systemuser_id")
     long systemuser_id;
 
-    public static enum Type {confirmRegistration, restorePassword};
-    @Column(name = "Type")
+
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private LinkType type;
 
     public ActivationLink() {
     }
@@ -40,12 +40,12 @@ public class ActivationLink {
         this.id = id;
     }
 
-    public String getLinkUUID() {
-        return linkUUID;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setLinkUUID(String linkUUID) {
-        this.linkUUID = linkUUID;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public long getSystemuser_id() {
@@ -56,12 +56,12 @@ public class ActivationLink {
         this.systemuser_id = systemuser_id;
     }
 
-    public Type getType() {
-        return type;
+    public void setType(LinkType type) {
+        this.type = type;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public LinkType getType() {
+        return type;
     }
 }
 

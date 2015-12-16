@@ -1,7 +1,5 @@
 package com.upteam.auth.domain;
 
-import org.hibernate.annotations.*;
-
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
@@ -27,7 +25,7 @@ public class SystemUser {
     String image;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private SystemUserStatus status;
 
     String password;
 
@@ -74,11 +72,11 @@ public class SystemUser {
         this.password = password;
     }
 
-    public Status getStatus() {
+    public SystemUserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(SystemUserStatus status) {
         this.status = status;
     }
 }

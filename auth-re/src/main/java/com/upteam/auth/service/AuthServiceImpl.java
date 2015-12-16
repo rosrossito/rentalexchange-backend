@@ -1,13 +1,14 @@
 package com.upteam.auth.service;
 
 import com.upteam.auth.component.ConfirmRegistrationEmail;
-import com.upteam.auth.component.EmailGenerator;
 import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.UserRegistrationEmail;
 import com.upteam.auth.domain.ActivationLink;
-import com.upteam.auth.domain.Status;
+import com.upteam.auth.domain.LinkType;
+import com.upteam.auth.domain.SystemUserStatus;
 import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
+import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
@@ -35,8 +36,6 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private EmailSender emailSender;
 
-    private EmailGenerator generator;
-
     @Override
     public void registration(RegistrationRequestVO request) throws UserAlreadyExistException {
         if (systemUserRepository.searchByEmail(request.getEmail()) == null) {
@@ -45,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
             systemUser.setLogin(request.getLogin());
             systemUser.setPassword(request.getPassword());
             systemUser.setImage(request.getImage());
-            systemUser.setStatus(Status.temporary);
+            systemUser.setStatus(SystemUserStatus.temporary);
             systemUserRepository.create(systemUser);
 
             UserRegistrationEmail userRegistrationEmail = new UserRegistrationEmail(request.getEmail());
@@ -59,24 +58,21 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
-
-        if (link != null) {
-            SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
-            if (user != null & user.getStatus() == Status.temporary) {
-                user.setPassword(request.getPassword());
-                user.setStatus(Status.active);
-                systemUserRepository.update(user);
-                ConfirmRegistrationEmail confirmRegistrationEmail = new ConfirmRegistrationEmail(user.getEmail());
-                emailSender.sendEmail(generator);
-                activationLinkRepository.delete(link.getId());
-            } else {
-                throw new InvalidConfirmRegistrationLinkException();
-            }
-
-        } else {
+        if (link == null || link.getType()!= LinkType.confirmRegistration) {
             throw new InvalidConfirmRegistrationLinkException();
         }
+        SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
+        if (user == null) {
+            throw new InvalidConfirmRegistrationLinkException();
+        }
+        if (user.getStatus()== SystemUserStatus.delete || user.getStatus()== SystemUserStatus.blocked ){
+            throw new SystemUserProblemException();
+        }
+        user.setPassword(request.getPassword());
+        user.setStatus(SystemUserStatus.active);
+        systemUserRepository.update(user);
+        ConfirmRegistrationEmail confirmRegistrationEmail = new ConfirmRegistrationEmail(user.getEmail());
+        emailSender.sendEmail(confirmRegistrationEmail);
+        activationLinkRepository.delete(link.getId());
     }
-
-
 }
