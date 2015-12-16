@@ -5,5 +5,6 @@ package com.upteam.auth.component;
  */
 public interface EmailSender {
     void sendEmail(EmailGenerator generator);
+    void sendEmail(EmailGenerator generator, String encoding);
 
 }

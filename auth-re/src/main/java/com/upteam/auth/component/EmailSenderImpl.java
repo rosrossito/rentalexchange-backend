@@ -24,7 +24,13 @@ public class EmailSenderImpl implements EmailSender {
         javaMailSender.send(converter(emailGenerator));
     }
 
-    private SimpleMailMessage converter(EmailGenerator emailGenerator){
+    public void sendEmail(EmailGenerator emailGenerator, String encoding) {
+        javaMailSender.setDefaultEncoding(encoding);
+        javaMailSender.send(converter(emailGenerator));
+    }
+
+
+    private SimpleMailMessage converter(EmailGenerator emailGenerator) {
         SimpleMailMessage result = new SimpleMailMessage();
         result.setFrom(emailGenerator.getFrom());
         result.setSubject(emailGenerator.getSubject());
