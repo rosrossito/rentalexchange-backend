@@ -64,12 +64,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
         LocalDateTime now = LocalDateTime.now();
-
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
+
         if (link == null || link.getType() != LinkType.confirmRegistration) {
             throw new InvalidConfirmRegistrationLinkException();
         }
-        if (now.toLocalDate() != link.getEffectiveDate().toLocalDate() || now.minusSeconds(linkPeriod).isBefore(link.getEffectiveDate())) {
+        if (now.toLocalDate() != link.getEffectiveDate().toLocalDate() || now.minusSeconds(linkPeriod).toLocalTime().isBefore(link.getEffectiveDate().toLocalTime())) {
             throw new InvalidConfirmRegistrationLinkException();
         }
         SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
