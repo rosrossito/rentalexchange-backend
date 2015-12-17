@@ -38,6 +38,10 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private EmailSender emailSender;
 
+    @Autowired
+    private long linkPeriod;
+
+
     @Override
     public void registration(RegistrationRequestVO request) throws UserAlreadyExistException {
         if (systemUserRepository.searchByEmail(request.getEmail()) == null) {
@@ -65,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
         if (link == null || link.getType() != LinkType.confirmRegistration) {
             throw new InvalidConfirmRegistrationLinkException();
         }
-        if (now.toLocalDate() != link.getEffectiveDate().toLocalDate() || now.minusSeconds(30).isBefore(link.getEffectiveDate())) {
+        if (now.toLocalDate() != link.getEffectiveDate().toLocalDate() || now.minusSeconds(linkPeriod).isBefore(link.getEffectiveDate())) {
             throw new InvalidConfirmRegistrationLinkException();
         }
         SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
