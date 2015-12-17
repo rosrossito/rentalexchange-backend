@@ -17,9 +17,12 @@ import com.upteam.auth.vo.RegistrationRequestVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -38,9 +41,8 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private EmailSender emailSender;
 
-    @Autowired
-    private long linkPeriod;
-
+    @Resource
+    private Environment env;
 
     @Override
     public void registration(RegistrationRequestVO request) throws UserAlreadyExistException {
@@ -63,15 +65,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
-        LocalDateTime now = LocalDateTime.now();
+
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
 
         if (link == null || link.getType() != LinkType.confirmRegistration) {
             throw new InvalidConfirmRegistrationLinkException();
         }
-        if (now.toLocalDate() != link.getEffectiveDate().toLocalDate() || now.minusSeconds(linkPeriod).toLocalTime().isBefore(link.getEffectiveDate().toLocalTime())) {
+        long linkLifePeriodSec = Long.valueOf(env.getProperty("activation.link.period"));
+        LocalDateTime toDateTime = LocalDateTime.now();
+        LocalDateTime fromDateTime = link.getEffectiveDate();
+        LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
+        long deltaSec = tempDateTime.until(toDateTime, ChronoUnit.SECONDS);
+        if (deltaSec > linkLifePeriodSec) {
             throw new InvalidConfirmRegistrationLinkException();
         }
+
         SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
         if (user == null) {
             throw new InvalidConfirmRegistrationLinkException();
