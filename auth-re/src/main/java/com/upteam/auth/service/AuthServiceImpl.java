@@ -57,22 +57,23 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
+
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
-        if (link == null || link.getType()!= LinkType.confirmRegistration) {
+        if (link == null || link.getType() != LinkType.confirmRegistration) {
             throw new InvalidConfirmRegistrationLinkException();
         }
         SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
         if (user == null) {
             throw new InvalidConfirmRegistrationLinkException();
         }
-        if (user.getStatus()== SystemUserStatus.delete || user.getStatus()== SystemUserStatus.blocked ){
+        if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
             throw new SystemUserProblemException();
         }
         user.setPassword(request.getPassword());
         user.setStatus(SystemUserStatus.active);
         systemUserRepository.update(user);
         ConfirmRegistrationEmail confirmRegistrationEmail = new ConfirmRegistrationEmail(user.getEmail());
-        emailSender.sendEmail(confirmRegistrationEmail);
+        emailSender.sendEmail(confirmRegistrationEmail, "UTF-8");
         activationLinkRepository.delete(link.getId());
     }
 }

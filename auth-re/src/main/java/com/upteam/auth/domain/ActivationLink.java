@@ -1,11 +1,12 @@
 package com.upteam.auth.domain;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 /**
  * Created by opasichnyk on 12/4/2015.
  */
-@NamedQuery(name="ActivationLink.findByUUID", query = "select u from ActivationLink u where u.uuid = :uuid")
+@NamedQuery(name = "ActivationLink.findByUUID", query = "select u from ActivationLink u where u.uuid = :uuid")
 
 @Entity
 @Table(name = "activationlink")
@@ -28,6 +29,10 @@ public class ActivationLink {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private LinkType type;
+
+    @Column(name = "effectivedate")
+    private LocalDate effectiveDate;
+
 
     public ActivationLink() {
     }
@@ -62,6 +67,14 @@ public class ActivationLink {
 
     public LinkType getType() {
         return type;
+    }
+
+    public LocalDate getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(LocalDate effectiveDate) {
+        this.effectiveDate = effectiveDate;
     }
 }
 

@@ -23,7 +23,8 @@
             <column name="IMAGE" type="varchar(600)" remarks="Create column for image">
                 <constraints nullable="true"/>
             </column>
-            <column name="STATUS" type="varchar(64)" remarks="Create column for status: temporary, active, blocked or deleted">
+            <column name="STATUS" type="varchar(64)"
+                    remarks="Create column for status: temporary, active, blocked or deleted">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -39,7 +40,8 @@
             <column name="UUID" type="varchar(64)" remarks="Create column for link UUID">
                 <constraints nullable="true"/>
             </column>
-            <column name="TYPE" type="varchar(64)" remarks="Create column for link type: confirmRegistration, restorePassword">
+            <column name="TYPE" type="varchar(64)"
+                    remarks="Create column for link type: confirmRegistration, restorePassword">
                 <constraints nullable="true"/>
             </column>
             <column name="SYSTEMUSER_ID" type="bigint" remarks="Create column for user Id">
@@ -54,5 +56,13 @@
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"/>
         <createSequence sequenceName="activationlink_seq"/>
+    </changeSet>
+    <changeSet id="17122015-01" author="kostik-skirdov" runOnChange="true">
+        <comment>Create table for store activation history</comment>
+        <addColumn tableName="activationlink">
+            <column name="effectivedate" type="timestamp">
+            </column>
+
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
