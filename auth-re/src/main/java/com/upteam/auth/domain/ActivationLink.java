@@ -2,6 +2,7 @@ package com.upteam.auth.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Created by opasichnyk on 12/4/2015.
@@ -31,7 +32,7 @@ public class ActivationLink {
     private LinkType type;
 
     @Column(name = "effectivedate")
-    private LocalDate effectiveDate;
+    private LocalDateTime effectiveDate;
 
 
     public ActivationLink() {
@@ -69,11 +70,11 @@ public class ActivationLink {
         return type;
     }
 
-    public LocalDate getEffectiveDate() {
+    public LocalDateTime getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(LocalDate effectiveDate) {
+    public void setEffectiveDate(LocalDate effectiveDateTime) {
         this.effectiveDate = effectiveDate;
     }
 }

@@ -5,8 +5,8 @@ import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.UserRegistrationEmail;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.LinkType;
-import com.upteam.auth.domain.SystemUserStatus;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.domain.SystemUserStatus;
 import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -57,9 +59,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
+        LocalDateTime now = LocalDateTime.now();
 
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         if (link == null || link.getType() != LinkType.confirmRegistration) {
+            throw new InvalidConfirmRegistrationLinkException();
+        }
+        if (now.toLocalDate() != link.getEffectiveDate().toLocalDate() || now.minusSeconds(30).isBefore(link.getEffectiveDate())) {
             throw new InvalidConfirmRegistrationLinkException();
         }
         SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
