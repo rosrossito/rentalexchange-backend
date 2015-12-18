@@ -81,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidConfirmRegistrationLinkException();
         }
 
-        SystemUser user = systemUserRepository.getById(link.getSystemuser_id());
+        SystemUser user = systemUserRepository.getById(link.getSystemuserId());
         if (user == null) {
             throw new InvalidConfirmRegistrationLinkException();
         }
