@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
         user.setStatus(SystemUserStatus.active);
         systemUserRepository.update(user);
         EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail());
-        emailSender.sendEmail(confirmRegistrationEmail, "UTF-8");
+        emailSender.sendEmail(confirmRegistrationEmail);
         activationLinkRepository.delete(link.getId());
     }
 }
