@@ -22,14 +22,10 @@ public class EmailSenderImpl implements EmailSender {
 
     @Override
     public void sendEmail(EmailGenerator emailGenerator) {
+        javaMailSender.setDefaultEncoding("UTF-8");
         javaMailSender.send(converter(emailGenerator));
-    }
 
-    public void sendEmail(EmailGenerator emailGenerator, String encoding) {
-        javaMailSender.setDefaultEncoding(encoding);
-        javaMailSender.send(converter(emailGenerator));
     }
-
 
     private SimpleMailMessage converter(EmailGenerator emailGenerator) {
         SimpleMailMessage result = new SimpleMailMessage();
