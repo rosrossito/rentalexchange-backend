@@ -1,5 +1,8 @@
 package com.upteam.auth.component.emailgenerator;
 
+import org.springframework.core.env.Environment;
+
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +10,10 @@ import java.util.List;
  * Created by Skirdovs on 16.12.2015.
  */
 public class EmailGeneratorConfirmRegistration implements EmailGenerator {
+
+    @Resource
+    private Environment env;
+
     private String mailTo;
     private final String subject = "Exchange Rental. Уведомление об активации учётной записи пользователя";
     private final String text = "Здравствуйте!\n" +
