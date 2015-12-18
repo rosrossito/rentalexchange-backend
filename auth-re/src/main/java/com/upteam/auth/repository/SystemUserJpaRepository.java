@@ -22,7 +22,6 @@ public class SystemUserJpaRepository implements SystemUserRepository{
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @PersistenceContext
-    @Autowired
     private EntityManager em;
 
     @Override

@@ -9,5 +9,4 @@ public interface ActivationLinkRepository extends BaseRepository<ActivationLink,
 
     ActivationLink getLinkByUUID(String uuid);
 
-
 }

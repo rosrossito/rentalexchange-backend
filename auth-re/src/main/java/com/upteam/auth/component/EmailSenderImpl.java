@@ -1,5 +1,6 @@
 package com.upteam.auth.component;
 
+import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

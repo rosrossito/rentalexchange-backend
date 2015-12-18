@@ -12,6 +12,4 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan(basePackages = "com.upteam.auth.domain")
 @EnableTransactionManagement
 public class PersistanceConfig {
-
-
 }

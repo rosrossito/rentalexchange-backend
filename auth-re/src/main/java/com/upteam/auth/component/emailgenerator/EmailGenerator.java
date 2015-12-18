@@ -1,4 +1,4 @@
-package com.upteam.auth.component;
+package com.upteam.auth.component.emailgenerator;
 
 import java.util.List;
 

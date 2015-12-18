@@ -1,4 +1,4 @@
-package com.upteam.auth.component;
+package com.upteam.auth.component.emailgenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Влад on 11.12.2015.
  */
-public class UserRegistrationEmail implements EmailGenerator {
+public class EmailGeneratorRegistration implements EmailGenerator {
 
     private String mailTo;
     private final String subject = "Exchange Rental. Инструкции по активации учётной записи пользователя";
@@ -22,7 +22,7 @@ public class UserRegistrationEmail implements EmailGenerator {
 
     private List<String> emailsTo = new ArrayList<String>();
 
-    public UserRegistrationEmail(String mailTo) {
+    public EmailGeneratorRegistration(String mailTo) {
         this.emailsTo.add(mailTo);
     }
 

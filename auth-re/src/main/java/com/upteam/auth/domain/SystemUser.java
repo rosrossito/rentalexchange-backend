@@ -1,9 +1,6 @@
 package com.upteam.auth.domain;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -13,8 +10,8 @@ import javax.persistence.Table;
 @NamedQuery(name="systemUser.findByMail", query = "select u from SystemUser u where u.email = :email")
 public class SystemUser {
 
-    @SequenceGenerator(name = "systemuserseq", sequenceName = "systemuser_seq", allocationSize = 1, initialValue = 1)
     @Id
+    @SequenceGenerator(name = "systemuserseq", sequenceName = "systemuser_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuserseq")
     private Long id;
 

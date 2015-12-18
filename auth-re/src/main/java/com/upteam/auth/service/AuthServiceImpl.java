@@ -1,8 +1,8 @@
 package com.upteam.auth.service;
 
-import com.upteam.auth.component.ConfirmRegistrationEmail;
 import com.upteam.auth.component.EmailSender;
-import com.upteam.auth.component.UserRegistrationEmail;
+import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistration;
+import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.LinkType;
 import com.upteam.auth.domain.SystemUser;
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     private Environment env;
 
     @Override
-    public void registration(RegistrationRequestVO request) throws UserAlreadyExistException {
+    public void registration(RegistrationRequestVO request) {
         if (systemUserRepository.searchByEmail(request.getEmail()) == null) {
             SystemUser systemUser = new SystemUser();
             systemUser.setEmail(request.getEmail());
@@ -55,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
             systemUser.setStatus(SystemUserStatus.temporary);
             systemUserRepository.create(systemUser);
 
-            UserRegistrationEmail userRegistrationEmail = new UserRegistrationEmail(request.getEmail());
+            EmailGeneratorRegistration userRegistrationEmail = new EmailGeneratorRegistration(request.getEmail());
 
             emailSender.sendEmail(userRegistrationEmail);
         } else {
@@ -77,6 +77,7 @@ public class AuthServiceImpl implements AuthService {
         LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
         long deltaSec = tempDateTime.until(toDateTime, ChronoUnit.SECONDS);
         if (deltaSec > linkLifePeriodSec) {
+            activationLinkRepository.delete(link.getId());
             throw new InvalidConfirmRegistrationLinkException();
         }
 
@@ -90,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(request.getPassword());
         user.setStatus(SystemUserStatus.active);
         systemUserRepository.update(user);
-        ConfirmRegistrationEmail confirmRegistrationEmail = new ConfirmRegistrationEmail(user.getEmail());
+        EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail());
         emailSender.sendEmail(confirmRegistrationEmail, "UTF-8");
         activationLinkRepository.delete(link.getId());
     }

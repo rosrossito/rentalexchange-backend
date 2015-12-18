@@ -57,12 +57,12 @@
                                  onUpdate="RESTRICT"/>
         <createSequence sequenceName="activationlink_seq"/>
     </changeSet>
+
     <changeSet id="17122015-01" author="kskirdov" runOnChange="true">
         <comment>Create table for store activation history</comment>
         <addColumn tableName="activationlink">
             <column name="effectivedate" type="timestamp">
             </column>
-
         </addColumn>
     </changeSet>
 </databaseChangeLog>

@@ -2,8 +2,6 @@ package com.upteam.auth.vo;
 
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -15,7 +13,6 @@ public class RegistrationConfirmRequestVO {
 
     @JsonProperty("uuid")
     private String uuid;
-
 
     public String getPassword() {
         return password;
@@ -32,8 +29,5 @@ public class RegistrationConfirmRequestVO {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-
-    // Define the logger object for this class
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }

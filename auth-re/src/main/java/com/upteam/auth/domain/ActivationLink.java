@@ -1,23 +1,19 @@
 package com.upteam.auth.domain;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by opasichnyk on 12/4/2015.
  */
-@NamedQuery(name = "ActivationLink.findByUUID", query = "select u from ActivationLink u where u.uuid = :uuid")
-
 @Entity
 @Table(name = "activationlink")
+@NamedQuery(name = "ActivationLink.findByUUID", query = "select u from ActivationLink u where u.uuid = :uuid")
 public class ActivationLink {
 
     @Id
     @SequenceGenerator(name = "activationlinkseq", sequenceName = "activationlink_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activationlinkseq")
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -27,14 +23,12 @@ public class ActivationLink {
     @Column(name = "systemuser_id")
     long systemuser_id;
 
-
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private LinkType type;
 
     @Column(name = "effectivedate")
     private LocalDateTime effectiveDate;
-
 
     public ActivationLink() {
     }

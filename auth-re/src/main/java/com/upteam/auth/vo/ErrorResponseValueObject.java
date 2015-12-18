@@ -1,8 +1,6 @@
 package com.upteam.auth.vo;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
@@ -32,8 +30,5 @@ public class ErrorResponseValueObject {
     public void setTimeStamp(LocalDate timeStamp) {
         this.timeStamp = timeStamp;
     }
-
-    // Define the logger object for this class
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }

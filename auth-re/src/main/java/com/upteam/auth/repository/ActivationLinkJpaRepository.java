@@ -13,47 +13,41 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Created by olegls2000 on 12/4/2015.
+ * Created by opasechnik on 12/4/2015.
  */
-
-
 @Repository
 @Transactional
 public class ActivationLinkJpaRepository implements ActivationLinkRepository {
 
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
     @PersistenceContext
-    @Autowired
     private EntityManager em;
 
     @Override
     public ActivationLink create(ActivationLink entity) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         em.persist(entity);
         return entity;
     }
 
     @Override
     public ActivationLink getById(Long id) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         return em.find(ActivationLink.class, id);
     }
 
     @Override
     public void delete(Long id) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         ActivationLink al = getById(id);
         if (al!=null) em.remove(al);
     }
 
     @Override
     public ActivationLink update(ActivationLink entity) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         return em.merge(entity);
     }
 
     @Override
     public ActivationLink getLinkByUUID(String uuid) {
-        //TODO REN-37 [BackEnd]Создание базового функционала по работе с БД >Maxim
         ActivationLink result;
         TypedQuery<ActivationLink> q = em.createNamedQuery("ActivationLink.findByUUID", ActivationLink.class);
         q.setParameter("uuid", uuid);
@@ -64,8 +58,5 @@ public class ActivationLinkJpaRepository implements ActivationLinkRepository {
         }
         return result;
     }
-
-    // Define the logger object for this class
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 }
