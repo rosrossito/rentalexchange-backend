@@ -1,36 +1,20 @@
 package com.upteam.auth.component.emailgenerator;
 
-import org.springframework.core.env.Environment;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Skirdovs on 16.12.2015.
  */
+
 public class EmailGeneratorConfirmRegistration implements EmailGenerator {
 
-    @Resource
-    private Environment env;
-
     private String mailTo;
-    private final String subject = "Exchange Rental. Уведомление об активации учётной записи пользователя";
-    private final String text = "Здравствуйте!\n" +
-            " \n" +
-            "Учётная запись пользователя с данным e-mail " + mailTo + " активирована.\n" +
-            " \n" +
-            "Для входа в личный кабинет перейдите по <a href=[%ссылка для входа с параметром e-mail%]>этой ссылке</a>\n" +
-            "(или откройте в интернет-браузере ссылку [%ссылка для входа с параметром e-mail%]).\n" +
-            "\n" +
-            "Если у вас возникли вопросы, пишите в <a href=mailto:[%e-mail поддержки%]>службу поддержки</a> по адресу [%e-mail поддержки%].\n" +
-            " \n" +
-            "Пожалуйста, не отвечайте на данное письмо.\n" +
-            " \n" +
-            "С уважением, Ваш <a href=[%адрес площадки%]>[%Название площадки%]</a>.";
-    private final String sendFrom = "exchange.rental.info@gmail.com";
-
+    private String sendFrom;
+    private String subject;
+    private String text;
     private List<String> emailsTo;
+
 
     public EmailGeneratorConfirmRegistration(String mailTo) {
         this.emailsTo = new ArrayList<String>();
@@ -57,4 +41,25 @@ public class EmailGeneratorConfirmRegistration implements EmailGenerator {
     public String getFrom() {
         return sendFrom;
     }
+
+    public void prepareMail(String supportMail, String host, String port, String exchangeRental) {
+        subject = exchangeRental + ". Уведомление об активации учётной записи пользователя";
+        text = "Здравствуйте!\n" +
+                " \n" +
+                "Учётная запись пользователя с данным e-mail " + mailTo + " активирована.\n" +
+                " \n" +
+                "Для входа в личный кабинет перейдите по <a href=" + host + ":" + port + "/" + mailTo + ">этой ссылке</a>\n" +
+                "(или откройте в интернет-браузере ссылку " + host + ":" + port + "/" + mailTo + ").\n" +
+                "\n" +
+                "Если у вас возникли вопросы, пишите в <a href=mailto:" + supportMail + ">службу поддержки</a> по адресу " + supportMail + ".\n" +
+                " \n" +
+                "Пожалуйста, не отвечайте на данное письмо.\n" +
+                " \n" +
+                "С уважением, Ваш <a href=" + host + ">" + exchangeRental + "</a>.";
+        sendFrom = supportMail;
+    }
+
+
+
+
 }
