@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -47,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void registration(RegistrationRequestVO request) {
         if (systemUserRepository.searchByEmail(request.getEmail()) == null) {
+
             SystemUser systemUser = new SystemUser();
             systemUser.setEmail(request.getEmail());
             systemUser.setLogin(request.getLogin());
@@ -55,9 +57,23 @@ public class AuthServiceImpl implements AuthService {
             systemUser.setStatus(SystemUserStatus.temporary);
             systemUserRepository.create(systemUser);
 
-            EmailGeneratorRegistration userRegistrationEmail = new EmailGeneratorRegistration(request.getEmail());
+            UUID uuidGenerator = UUID.randomUUID();
+            String uuid = uuidGenerator.toString();
+            LocalDateTime toDateTime = LocalDateTime.now();
 
-            emailSender.sendEmail(userRegistrationEmail);
+            ActivationLink activationLink = new ActivationLink();
+            activationLink.setEffectiveDate(toDateTime);
+            activationLink.setUuid(uuid);
+            activationLink.setSystemuserId(systemUser.getId());
+
+            String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + uuid;
+
+            activationLinkRepository.create(activationLink);
+
+            EmailGeneratorRegistration emailGeneratorRegistration = new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink);
+
+            emailSender.sendEmail(emailGeneratorRegistration);
+
         } else {
             throw new UserAlreadyExistException();
         }

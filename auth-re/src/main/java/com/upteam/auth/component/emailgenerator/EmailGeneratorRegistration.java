@@ -9,12 +9,13 @@ import java.util.List;
 public class EmailGeneratorRegistration implements EmailGenerator {
 
     private String mailTo;
+    private String registrationConfirmLink;
     private final String subject = "Exchange Rental. Инструкции по активации учётной записи пользователя";
     private final String text = "Здравствуйте! \n"
-            + "На сайте [Rentalexchange.com%] была выполнена регистрация учётной записи пользователя с указанием адреса" + "userEmail" + ". \n\n"
+            + "На сайте Rentalexchange.com была выполнена регистрация учётной записи пользователя с указанием адреса " + mailTo + ". \n\n"
             + "Если Вы случайно получили это письмо, пожалуйста, проигнорируйте его. \n\n"
-            + "Для активации учётной записи пользователя перейдите по <a href=[%уникальный адрес ссылки для регистрации данного e-mail%]>этой ссылке</a> \n"
-            + "(или откройте в интернет-браузере ссылку [%уникальный адрес ссылки для регистрации данного e-mail%]).\n\n"
+            + "Для активации учётной записи пользователя перейдите по " + registrationConfirmLink + " этой ссылке. \n"
+            + "(или откройте в интернет-браузере ссылку " + registrationConfirmLink + ")\n\n"
             + "Если у вас возникли вопросы, пишите в <a href=mailto:[%e-mail поддержки%]>службу поддержки</a> по адресу [%e-mail поддержки%]. \n\n"
             + "Пожалуйста, не отвечайте на данное письмо. \n\n"
             + "С уважением, Ваш <a href=[%адрес площадки%]>[%Название площадки%]</a>." ;
@@ -22,8 +23,9 @@ public class EmailGeneratorRegistration implements EmailGenerator {
 
     private List<String> emailsTo = new ArrayList<String>();
 
-    public EmailGeneratorRegistration(String mailTo) {
+    public EmailGeneratorRegistration(String mailTo, String registrationConfirmLink) {
         this.emailsTo.add(mailTo);
+        this.registrationConfirmLink = registrationConfirmLink;
     }
 
     @Override

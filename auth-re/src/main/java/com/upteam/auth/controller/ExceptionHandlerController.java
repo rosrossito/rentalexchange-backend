@@ -38,7 +38,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(UserAlreadyExistException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponseValueObject userAreadyExist(UserAlreadyExistException e) {
+    public ErrorResponseValueObject userAlreadyExist(UserAlreadyExistException e) {
         return getErrorVO(e);
     }
 

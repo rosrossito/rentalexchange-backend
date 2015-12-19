@@ -18,10 +18,10 @@ public class ActivationLink {
     private Long id;
 
     @Column(name = "uuid")
-    String uuid;
+    private String uuid;
 
     @Column(name = "systemuser_id")
-    long systemuserId;
+    private Long systemuserId;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -49,11 +49,11 @@ public class ActivationLink {
         this.uuid = uuid;
     }
 
-    public long getSystemuserId() {
+    public Long getSystemuserId() {
         return systemuserId;
     }
 
-    public void setSystemuserId(long systemuserId) {
+    public void setSystemuserId(Long systemuserId) {
         this.systemuserId = systemuserId;
     }
 
