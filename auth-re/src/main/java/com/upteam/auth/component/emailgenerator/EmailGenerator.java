@@ -12,12 +12,8 @@ public interface EmailGenerator {
 
     String getSubject();
 
-    String getText();
-
-    String getFrom();
-
     String getTemplate();
 
-    Map getModel();
+    Map<String, Object> getModel();
 
 }

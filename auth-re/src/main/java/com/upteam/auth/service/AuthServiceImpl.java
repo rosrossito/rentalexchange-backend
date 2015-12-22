@@ -1,6 +1,7 @@
 package com.upteam.auth.service;
 
 import com.upteam.auth.component.EmailSender;
+import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistration;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.domain.ActivationLink;
@@ -47,35 +48,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void registration(RegistrationRequestVO request) {
-        if (systemUserRepository.searchByEmail(request.getEmail()) == null) {
-
-            SystemUser systemUser = new SystemUser();
-            systemUser.setEmail(request.getEmail());
-            systemUser.setLogin(request.getLogin());
-            systemUser.setPassword(request.getPassword());
-            systemUser.setImage(request.getImage());
-            systemUser.setStatus(SystemUserStatus.temporary);
-            systemUserRepository.create(systemUser);
-
-            UUID uuidGenerator = UUID.randomUUID();
-            String uuid = uuidGenerator.toString();
-            LocalDateTime toDateTime = LocalDateTime.now();
-
-            ActivationLink activationLink = new ActivationLink();
-            activationLink.setEffectiveDate(toDateTime);
-            activationLink.setUuid(uuid);
-            activationLink.setSystemuserId(systemUser.getId());
-
-            String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + uuid;
-
-            activationLinkRepository.create(activationLink);
-
-            EmailGeneratorRegistration emailGeneratorRegistration = new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
-            emailSender.sendEmail(emailGeneratorRegistration);
-
-        } else {
+        if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
             throw new UserAlreadyExistException();
         }
+        SystemUser systemUser = new SystemUser();
+        systemUser.setEmail(request.getEmail());
+        systemUser.setStatus(SystemUserStatus.temporary);
+        systemUserRepository.create(systemUser);
+
+        UUID uuidGenerator = UUID.randomUUID();
+        String uuid = uuidGenerator.toString();
+        LocalDateTime toDateTime = LocalDateTime.now();
+
+        ActivationLink activationLink = new ActivationLink();
+        activationLink.setEffectiveDate(toDateTime);
+        activationLink.setUuid(uuid);
+        activationLink.setSystemuserId(systemUser.getId());
+        activationLinkRepository.create(activationLink);
+
+        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/registration-confirm/" + uuid;
+        EmailGenerator emailGeneratorRegistration =
+                new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
+        emailSender.sendEmail(emailGeneratorRegistration);
+
+        LOG.info("User with email: "+systemUser.getEmail()+
+                " successfully registered, status - "+systemUser.getStatus().toString()+".");
     }
 
     @Override

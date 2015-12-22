@@ -15,7 +15,8 @@
 <p>Для активации учётной записи пользователя перейдите по <a href=${registrationConfirmLink}>этой ссылке</a><br>
     (или откройте в интернет-браузере ссылку ${registrationConfirmLink})</p>
 
-<p>Если у вас возникли вопросы, пишите в <a href="mailto: exchange.rental.info@gmail.com">службу поддержки</a> по адресу exchange.rental.info@gmail.com.</p>
+<p>Если у вас возникли вопросы, пишите в <a href="mailto: exchange.rental.info@gmail.com">службу поддержки</a> по адресу
+    exchange.rental.info@gmail.com.</p>
 
 <p><strong>Пожалуйста, не отвечайте на данное письмо.</strong></p>
 

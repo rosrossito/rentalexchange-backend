@@ -11,11 +11,9 @@ import java.util.Map;
 public class EmailGeneratorConfirmRegistration implements EmailGenerator {
 
     private String mailTo;
-    private String sendFrom;
     private String subject;
     private String text;
     private List<String> emailsTo;
-
 
     public EmailGeneratorConfirmRegistration(String mailTo) {
         this.emailsTo = new ArrayList<String>();
@@ -34,22 +32,12 @@ public class EmailGeneratorConfirmRegistration implements EmailGenerator {
     }
 
     @Override
-    public String getText() {
-        return text;
-    }
-
-    @Override
-    public String getFrom() {
-        return sendFrom;
-    }
-
-    @Override
     public String getTemplate() {
         return null;
     }
 
     @Override
-    public Map getModel() {
+    public Map<String, Object> getModel() {
         return null;
     }
 
@@ -67,10 +55,5 @@ public class EmailGeneratorConfirmRegistration implements EmailGenerator {
                 "Пожалуйста, не отвечайте на данное письмо.\n" +
                 " \n" +
                 "С уважением, Ваш <a href=" + host + ">" + exchangeRental + "</a>.";
-        sendFrom = supportMail;
     }
-
-
-
-
 }
