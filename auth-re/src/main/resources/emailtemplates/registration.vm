@@ -5,21 +5,31 @@
     }
 </style>
 <body>
-Здравствуйте!<br>
+<table width="100%" height="100%" style="min-width:348px" border="0" cellspacing="0" cellpadding="0">
+    <tbody>
+    <tr height="32px"></tr>
+    <tr align="center">
+        Здравствуйте!<br>
 
-<p>На сайте <strong>Rental-exchange</strong> была выполнена регистрация учётной записи пользователя с указанием
-    адреса ${userEmail}.</p>
+        <p>На сайте <strong>Rental-exchange</strong> была выполнена регистрация учётной записи пользователя с указанием
+            адреса ${userEmail}.</p>
 
-<p>Если Вы случайно получили это письмо, пожалуйста, проигнорируйте его.</p>
+        <p>Если Вы случайно получили это письмо, пожалуйста, проигнорируйте его.</p>
 
-<p>Для активации учётной записи пользователя перейдите по <a href=${registrationConfirmLink}>этой ссылке</a><br>
-    (или откройте в интернет-браузере ссылку ${registrationConfirmLink})</p>
+        <p>Для активации учётной записи пользователя перейдите по <a href=${registrationConfirmLink}>этой ссылке</a><br>
+            (или откройте в интернет-браузере ссылку ${registrationConfirmLink})</p>
 
-<p>Если у вас возникли вопросы, пишите в <a href="mailto: exchange.rental.info@gmail.com">службу поддержки</a> по адресу
-    exchange.rental.info@gmail.com.</p>
+        <p>Если у вас возникли вопросы, пишите в <a href="mailto: exchange.rental.info@gmail.com">службу поддержки</a> по адресу
+            exchange.rental.info@gmail.com.</p>
 
-<p><strong>Пожалуйста, не отвечайте на данное письмо.</strong></p>
+        <p><strong>Пожалуйста, не отвечайте на данное письмо.</strong></p>
 
-<p><strong>С уважением, Ваш <a href=rental-excnage.com>Rental-exchange</a>.</strong></p>
+        <p><strong>С уважением, Ваш <a href=rental-excnage.com>Rental-exchange</a>.</strong></p>
+    </tr>
+    <tr height="32px"></tr>
+    </tbody>
+</table>
+
+
 </body>
 </html>
