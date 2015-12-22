@@ -35,7 +35,8 @@ public class EmailSenderImpl implements EmailSender {
     public void sendEmail(final EmailGenerator emailGenerator) {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare(MimeMessage mimeMessage) throws Exception {
-                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                message.setSubject(emailGenerator.getSubject());
                 message.setTo(emailGenerator.getEmailsTo().get(0));
                 message.setFrom(emailGenerator.getFrom());
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
