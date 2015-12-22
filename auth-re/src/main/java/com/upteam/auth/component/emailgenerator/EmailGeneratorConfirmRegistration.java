@@ -2,6 +2,7 @@ package com.upteam.auth.component.emailgenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Skirdovs on 16.12.2015.
@@ -40,6 +41,16 @@ public class EmailGeneratorConfirmRegistration implements EmailGenerator {
     @Override
     public String getFrom() {
         return sendFrom;
+    }
+
+    @Override
+    public String getTemplate() {
+        return null;
+    }
+
+    @Override
+    public Map getModel() {
+        return null;
     }
 
     public void prepareMail(String supportMail, String host, String port, String exchangeRental) {
