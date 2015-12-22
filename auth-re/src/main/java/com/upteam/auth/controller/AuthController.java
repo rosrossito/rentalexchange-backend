@@ -53,7 +53,7 @@ public class AuthController {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                message.setTo("pasechnik.o.n@gmail.com");
+                message.setTo("yeapless@gmail.com");
                 message.setFrom("exchange.rental.info@gmail.com");
                 Map model = new HashMap();
                 User user = new User();

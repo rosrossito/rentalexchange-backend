@@ -70,9 +70,9 @@ public class AuthServiceImpl implements AuthService {
 
             activationLinkRepository.create(activationLink);
 
-            EmailGeneratorRegistration emailGeneratorRegistration = new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink);
-
-            emailSender.sendEmail(emailGeneratorRegistration);
+            EmailGeneratorRegistration emailGeneratorRegistration = new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
+            emailGeneratorRegistration.sendEmailTemplate();
+    //        emailSender.sendEmail(emailGeneratorRegistration);
 
         } else {
             throw new UserAlreadyExistException();
