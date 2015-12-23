@@ -159,6 +159,8 @@ public class AuthServiceImpl implements AuthService {
 
             activationLinkRepository.create(activationLink);
 
+            LOG.info("Activation link for restore password was successfully sent to user with email: " + systemUser.getEmail() +
+                    ", status - " + systemUser.getStatus().toString() + ".");
 
         }else {throw new AccountIsNotActiveException();}
         }else {throw new EmailIsAbsentException();}
