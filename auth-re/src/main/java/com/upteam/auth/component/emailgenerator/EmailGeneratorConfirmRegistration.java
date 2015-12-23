@@ -16,11 +16,9 @@ public class EmailGeneratorConfirmRegistration implements EmailGenerator {
     private List<String> emailsTo = new ArrayList<String>();
     private String activateUserLink;
 
-
     public EmailGeneratorConfirmRegistration(String mailTo, String activateUserLink) {
         this.emailsTo.add(mailTo);
         this.activateUserLink = activateUserLink;
-
     }
 
     @Override
