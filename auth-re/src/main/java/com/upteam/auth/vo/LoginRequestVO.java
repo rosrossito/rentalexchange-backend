@@ -1,26 +1,16 @@
 package com.upteam.auth.vo;
 
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * Created by opasichnyk on 11/25/2015.
+ * Created by Влад on 22.12.2015.
  */
-public class RegistrationRequestVO {
-
+public class LoginRequestVO {
     @JsonProperty("email")
     private String email;
 
     @JsonProperty("password")
     private String password;
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getEmail() {
         return email;
@@ -30,4 +20,11 @@ public class RegistrationRequestVO {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

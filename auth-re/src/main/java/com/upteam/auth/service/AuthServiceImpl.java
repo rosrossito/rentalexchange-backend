@@ -8,11 +8,10 @@ import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.LinkType;
 import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.domain.SystemUserStatus;
-import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
-import com.upteam.auth.exception.SystemUserProblemException;
-import com.upteam.auth.exception.UserAlreadyExistException;
+import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
+import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import org.slf4j.Logger;
@@ -53,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
         }
         SystemUser systemUser = new SystemUser();
         systemUser.setEmail(request.getEmail());
+        systemUser.setPassword(request.getPassword());
         systemUser.setStatus(SystemUserStatus.temporary);
         systemUserRepository.create(systemUser);
 
@@ -71,8 +71,8 @@ public class AuthServiceImpl implements AuthService {
                 new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
         emailSender.sendEmail(emailGeneratorRegistration);
 
-        LOG.info("User with email: "+systemUser.getEmail()+
-                " successfully registered, status - "+systemUser.getStatus().toString()+".");
+        LOG.info("User with email: " + systemUser.getEmail() +
+                " successfully registered, status - " + systemUser.getStatus().toString() + ".");
     }
 
     @Override
@@ -108,4 +108,21 @@ public class AuthServiceImpl implements AuthService {
         emailSender.sendEmail(confirmRegistrationEmail);
         activationLinkRepository.delete(link.getId());
     }
+
+    @Override
+    public void login(LoginRequestVO request) {
+        SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
+
+        if (systemUser == null || systemUser.getEmail() == null || !systemUser.getPassword().equals(request.getPassword())) {
+            throw new IncorrectLoginException();
+
+        } else if (systemUser.getStatus() == SystemUserStatus.temporary) {
+            throw new NonActiveAccountException();
+
+        } else if (systemUser.getStatus() == SystemUserStatus.blocked || systemUser.getStatus() == SystemUserStatus.delete) {
+            throw new BlockedAccountException();
+        }
+
+    }
+
 }
