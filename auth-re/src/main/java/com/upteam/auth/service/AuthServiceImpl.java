@@ -3,17 +3,17 @@ package com.upteam.auth.service;
 import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistration;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
+import com.upteam.auth.component.emailgenerator.EmailRestorePassword;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.LinkType;
 import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.domain.SystemUserStatus;
-import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
-import com.upteam.auth.exception.SystemUserProblemException;
-import com.upteam.auth.exception.UserAlreadyExistException;
+import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
+import com.upteam.auth.vo.RestorePasswordRequestVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,4 +112,41 @@ public class AuthServiceImpl implements AuthService {
         emailSender.sendEmail(confirmRegistrationEmail);
         activationLinkRepository.delete(link.getId());
     }
+
+    @Override
+    public void changePassword(RestorePasswordRequestVO request) {
+
+        if(request.getEmail()==null) {
+        if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
+
+            //SystemUser systemUser = new SystemUser();
+            SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
+            systemUser.setEmail(request.getEmail());
+            systemUser.setLogin(request.getLogin());
+
+            UUID uuidGenerator = UUID.randomUUID();
+            String uuid = uuidGenerator.toString();
+            LocalDateTime toDateTime = LocalDateTime.now();
+
+            ActivationLink activationLink = new ActivationLink();
+            activationLink.setEffectiveDate(toDateTime);
+            activationLink.setUuid(uuid);
+            activationLink.setSystemuserId(systemUser.getId());
+
+            String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + uuid;
+
+            activationLinkRepository.create(activationLink);
+
+            EmailRestorePassword emailRestorePassword = new EmailRestorePassword (request.getEmail(), restorePasswordLink);
+            emailSender.sendEmail(emailRestorePassword);
+
+            activationLinkRepository.create(activationLink);
+
+
+        }else {throw new AccountIsNotActiveException();}
+        }else {throw new EmailIsAbsentException();}
+
+
+    }
+
 }
