@@ -3,6 +3,7 @@ package com.upteam.auth.controller;
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
+import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import com.upteam.auth.vo.RestorePasswordRequestVO;
@@ -31,6 +32,12 @@ public class AuthController {
     @ResponseBody
     void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request)  {
         authService.confirmRegistration(request);
+    }
+
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    @ResponseBody
+    void userLogin(@RequestBody LoginRequestVO request) {
+        authService.login(request);
     }
 
     @RequestMapping(value = "/user/change-password/request", method = RequestMethod.POST)

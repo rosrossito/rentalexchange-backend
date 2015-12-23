@@ -1,11 +1,15 @@
 package com.upteam.auth.config;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -32,4 +36,15 @@ public class EmailConfig {
         prop.put("mail.debug", env.getProperty("smtp.debug"));
         return mailSender;
     }
+
+    @Bean
+    public VelocityEngine velocityEngine(){
+        VelocityEngineFactoryBean velocityEngine = new VelocityEngineFactoryBean();
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put("resource.loader", "class");
+        properties.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocityEngine.setVelocityPropertiesMap(properties);
+        return velocityEngine.getObject();
+    }
+
 }

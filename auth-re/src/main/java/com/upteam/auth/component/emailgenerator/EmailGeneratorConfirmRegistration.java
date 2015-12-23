@@ -1,7 +1,9 @@
 package com.upteam.auth.component.emailgenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Skirdovs on 16.12.2015.
@@ -9,17 +11,16 @@ import java.util.List;
 
 public class EmailGeneratorConfirmRegistration implements EmailGenerator {
 
-    private String mailTo;
-    private String sendFrom;
-    private String subject;
-    private String text;
-    private List<String> emailsTo;
+    private static final String EMAIL_TEMPLATE = "emailtemplates/registration-confirm.vm";
+    private static final String subject = "Exchange Rental. Уведомление об активации учётной записи пользователя";
+    private List<String> emailsTo = new ArrayList<String>();
+    private String activateUserLink;
 
 
-    public EmailGeneratorConfirmRegistration(String mailTo) {
-        this.emailsTo = new ArrayList<String>();
+    public EmailGeneratorConfirmRegistration(String mailTo, String activateUserLink) {
         this.emailsTo.add(mailTo);
-        this.mailTo = mailTo;
+        this.activateUserLink = activateUserLink;
+
     }
 
     @Override
@@ -33,33 +34,17 @@ public class EmailGeneratorConfirmRegistration implements EmailGenerator {
     }
 
     @Override
-    public String getText() {
-        return text;
+    public String getTemplate() {
+        return EMAIL_TEMPLATE;
     }
 
     @Override
-    public String getFrom() {
-        return sendFrom;
+    public Map<String, Object> getModel() {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("activateUserLink", activateUserLink);
+        model.put("userEmail", emailsTo.get(0));
+        return model;
     }
-
-    public void prepareMail(String supportMail, String host, String port, String exchangeRental) {
-        subject = exchangeRental + ". Уведомление об активации учётной записи пользователя";
-        text = "Здравствуйте!\n" +
-                " \n" +
-                "Учётная запись пользователя с данным e-mail " + mailTo + " активирована.\n" +
-                " \n" +
-                "Для входа в личный кабинет перейдите по <a href=" + host + ":" + port + "/" + mailTo + ">этой ссылке</a>\n" +
-                "(или откройте в интернет-браузере ссылку " + host + ":" + port + "/" + mailTo + ").\n" +
-                "\n" +
-                "Если у вас возникли вопросы, пишите в <a href=mailto:" + supportMail + ">службу поддержки</a> по адресу " + supportMail + ".\n" +
-                " \n" +
-                "Пожалуйста, не отвечайте на данное письмо.\n" +
-                " \n" +
-                "С уважением, Ваш <a href=" + host + ">" + exchangeRental + "</a>.";
-        sendFrom = supportMail;
-    }
-
-
 
 
 }

@@ -1,5 +1,6 @@
 package com.upteam.auth.controller;
 
+import com.upteam.auth.exception.*;
 import com.upteam.auth.exception.AccountIsNotActiveException;
 import com.upteam.auth.exception.EmailIsAbsentException;
 import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
@@ -41,6 +42,27 @@ public class ExceptionHandlerController {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponseValueObject userAlreadyExist(UserAlreadyExistException e) {
+        return getErrorVO(e);
+    }
+
+    @ExceptionHandler(IncorrectLoginException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponseValueObject incorrectLoginException(IncorrectLoginException e) {
+        return getErrorVO(e);
+    }
+
+    @ExceptionHandler(NonActiveAccountException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponseValueObject nonActiveAccount(NonActiveAccountException e) {
+        return getErrorVO(e);
+    }
+
+    @ExceptionHandler(BlockedAccountException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponseValueObject blockedAccount(BlockedAccountException e) {
         return getErrorVO(e);
     }
 

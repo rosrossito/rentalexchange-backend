@@ -1,6 +1,7 @@
 package com.upteam.auth.service;
 
 import com.upteam.auth.component.EmailSender;
+import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistration;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.component.emailgenerator.EmailRestorePassword;
@@ -11,6 +12,7 @@ import com.upteam.auth.domain.SystemUserStatus;
 import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
+import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import com.upteam.auth.vo.RestorePasswordRequestVO;
@@ -47,36 +49,32 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void registration(RegistrationRequestVO request) {
-        if (systemUserRepository.searchByEmail(request.getEmail()) == null) {
-
-            SystemUser systemUser = new SystemUser();
-            systemUser.setEmail(request.getEmail());
-            systemUser.setLogin(request.getLogin());
-            systemUser.setPassword(request.getPassword());
-            systemUser.setImage(request.getImage());
-            systemUser.setStatus(SystemUserStatus.temporary);
-            systemUserRepository.create(systemUser);
-
-            UUID uuidGenerator = UUID.randomUUID();
-            String uuid = uuidGenerator.toString();
-            LocalDateTime toDateTime = LocalDateTime.now();
-
-            ActivationLink activationLink = new ActivationLink();
-            activationLink.setEffectiveDate(toDateTime);
-            activationLink.setUuid(uuid);
-            activationLink.setSystemuserId(systemUser.getId());
-
-            String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + uuid;
-
-            activationLinkRepository.create(activationLink);
-
-            EmailGeneratorRegistration emailGeneratorRegistration = new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink);
-
-            emailSender.sendEmail(emailGeneratorRegistration);
-
-        } else {
+        if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
             throw new UserAlreadyExistException();
         }
+        SystemUser systemUser = new SystemUser();
+        systemUser.setEmail(request.getEmail());
+        systemUser.setPassword(request.getPassword());
+        systemUser.setStatus(SystemUserStatus.temporary);
+        systemUserRepository.create(systemUser);
+
+        UUID uuidGenerator = UUID.randomUUID();
+        String uuid = uuidGenerator.toString();
+        LocalDateTime toDateTime = LocalDateTime.now();
+
+        ActivationLink activationLink = new ActivationLink();
+        activationLink.setEffectiveDate(toDateTime);
+        activationLink.setUuid(uuid);
+        activationLink.setSystemuserId(systemUser.getId());
+        activationLinkRepository.create(activationLink);
+
+        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/registration-confirm/" + uuid;
+        EmailGenerator emailGeneratorRegistration =
+                new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
+        emailSender.sendEmail(emailGeneratorRegistration);
+
+        LOG.info("User with email: " + systemUser.getEmail() +
+                " successfully registered, status - " + systemUser.getStatus().toString() + ".");
     }
 
     @Override
@@ -107,11 +105,30 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(request.getPassword());
         user.setStatus(SystemUserStatus.active);
         systemUserRepository.update(user);
-        EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail());
-        confirmRegistrationEmail.prepareMail(env.getProperty("support.mail"), env.getProperty("ui.host"), env.getProperty("ui.port"), env.getProperty("ui.name"));
+
+        String activateUserLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + user.getEmail();
+        EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail(), activateUserLink);
+
         emailSender.sendEmail(confirmRegistrationEmail);
         activationLinkRepository.delete(link.getId());
     }
+
+    @Override
+    public void login(LoginRequestVO request) {
+        SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
+
+        if (systemUser == null || systemUser.getEmail() == null || !systemUser.getPassword().equals(request.getPassword())) {
+            throw new IncorrectLoginException();
+
+        } else if (systemUser.getStatus() == SystemUserStatus.temporary) {
+            throw new NonActiveAccountException();
+
+        } else if (systemUser.getStatus() == SystemUserStatus.blocked || systemUser.getStatus() == SystemUserStatus.delete) {
+            throw new BlockedAccountException();
+        }
+
+    }
+
 
     @Override
     public void changePassword(RestorePasswordRequestVO request) {

@@ -1,5 +1,6 @@
 package com.upteam.auth.service;
 
+import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import com.upteam.auth.vo.RestorePasswordRequestVO;
@@ -10,5 +11,6 @@ import com.upteam.auth.vo.RestorePasswordRequestVO;
 public interface AuthService {
     public void registration(RegistrationRequestVO request);
     public void confirmRegistration(RegistrationConfirmRequestVO request);
+    public void login(LoginRequestVO request);
     public void changePassword(RestorePasswordRequestVO request);
 }

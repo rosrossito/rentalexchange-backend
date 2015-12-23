@@ -1,4 +1,4 @@
-package com.upteam.app;
+package emailtemplates.upteam.app;
 
 import com.upteam.auth.config.AuthConfig;
 import org.springframework.boot.SpringApplication;
