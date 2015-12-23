@@ -103,8 +103,10 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(request.getPassword());
         user.setStatus(SystemUserStatus.active);
         systemUserRepository.update(user);
-        EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail());
-        confirmRegistrationEmail.prepareMail(env.getProperty("support.mail"), env.getProperty("ui.host"), env.getProperty("ui.port"), env.getProperty("ui.name"));
+
+        String activateUserLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + user.getEmail();
+        EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail(), activateUserLink);
+
         emailSender.sendEmail(confirmRegistrationEmail);
         activationLinkRepository.delete(link.getId());
     }
