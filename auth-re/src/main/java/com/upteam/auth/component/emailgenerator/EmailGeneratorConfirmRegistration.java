@@ -12,7 +12,7 @@ import java.util.Map;
 public class EmailGeneratorConfirmRegistration implements EmailGenerator {
 
     private static final String EMAIL_TEMPLATE = "emailtemplates/registration-confirm.vm";
-    private static final String subject = "Exchange Rental. Инструкции по активации учётной записи пользователя";
+    private static final String subject = "Exchange Rental. Уведомление об активации учётной записи пользователя";
     private List<String> emailsTo = new ArrayList<String>();
     private String activateUserLink;
 
