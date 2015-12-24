@@ -15,7 +15,7 @@ import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
-import com.upteam.auth.vo.RestorePasswordRequestVO;
+import com.upteam.auth.vo.ChangePasswordRequestVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public void changePassword(RestorePasswordRequestVO request) {
+    public void changePasswordRequest(ChangePasswordRequestVO request) {
 
         if(request.getEmail()==null) {
         if (systemUserRepository.searchByEmail(request.getEmail()) != null) {

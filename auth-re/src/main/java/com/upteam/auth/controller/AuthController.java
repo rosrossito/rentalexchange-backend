@@ -6,7 +6,7 @@ import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
-import com.upteam.auth.vo.RestorePasswordRequestVO;
+import com.upteam.auth.vo.ChangePasswordRequestVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +41,8 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/user/change-password/request", method = RequestMethod.POST)
-    void userChangePassword(@RequestBody RestorePasswordRequestVO request) throws SystemUserProblemException {
-        authService.changePassword(request);
+    void changePasswordRequest(@RequestBody ChangePasswordRequestVO request) throws SystemUserProblemException {
+        authService.changePasswordRequest(request);
     }
 
 
