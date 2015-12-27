@@ -29,6 +29,7 @@
                             <password>${dataSource.project.password}</password>
                             <defaultSchemaName>rental</defaultSchemaName>
                             <changeLogFile>src/main/liquibase/deploy-schema.xml</changeLogFile>
+
                         </configuration>
 
                         <executions>
