@@ -5,12 +5,10 @@ import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistration;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.component.emailgenerator.EmailRestorePassword;
-import com.upteam.auth.domain.ActivationLink;
-import com.upteam.auth.domain.LinkType;
-import com.upteam.auth.domain.SystemUser;
-import com.upteam.auth.domain.SystemUserStatus;
+import com.upteam.auth.domain.*;
 import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
+import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
@@ -44,6 +42,10 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private EmailSender emailSender;
 
+    @Autowired
+    private ActivityRepository activityRepository;
+
+
     @Resource
     private Environment env;
 
@@ -75,6 +77,14 @@ public class AuthServiceImpl implements AuthService {
 
         LOG.info("User with email: " + systemUser.getEmail() +
                 " successfully registered, status - " + systemUser.getStatus().toString() + ".");
+
+        Activity activity = new Activity();
+        activity.setSystemUserId(systemUser.getId());
+        activity.setActivityType(ActivityType.systemUserRegistration);
+        activity.setDescription("Registration user");
+        activity.setActivityTime(LocalDateTime.now());
+        activityRepository.create(activity);
+
     }
 
     @Override
@@ -111,6 +121,13 @@ public class AuthServiceImpl implements AuthService {
 
         emailSender.sendEmail(confirmRegistrationEmail);
         activationLinkRepository.delete(link.getId());
+
+        Activity activity = new Activity();
+        activity.setSystemUserId(user.getId());
+        activity.setActivityType(ActivityType.systemUserConfirmRegistration);
+        activity.setDescription("Confirm registration user");
+        activity.setActivityTime(LocalDateTime.now());
+        activityRepository.create(activity);
     }
 
     @Override
@@ -161,6 +178,13 @@ public class AuthServiceImpl implements AuthService {
 
             LOG.info("Activation link for restore password was successfully sent to user with email: " + systemUser.getEmail() +
                     ", status - " + systemUser.getStatus().toString() + ".");
+
+            Activity activity = new Activity();
+            activity.setSystemUserId(systemUser.getId());
+            activity.setActivityType(ActivityType.systemUserRestorePassword);
+            activity.setDescription("Restore password of user");
+            activity.setActivityTime(LocalDateTime.now());
+            activityRepository.create(activity);
 
         }else {throw new AccountIsNotActiveException();}
         }else {throw new EmailIsAbsentException();}
