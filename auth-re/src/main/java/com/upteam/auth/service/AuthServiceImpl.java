@@ -150,10 +150,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void changePasswordRequest(ChangePasswordRequestVO request) {
 
-        if(request.getEmail()==null) {
+        if(request.getEmail()!=null) {
         if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
 
-            //SystemUser systemUser = new SystemUser();
             SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
             systemUser.setEmail(request.getEmail());
             systemUser.setLogin(request.getLogin());
@@ -162,9 +161,15 @@ public class AuthServiceImpl implements AuthService {
             String uuid = uuidGenerator.toString();
             LocalDateTime toDateTime = LocalDateTime.now();
 
+
+            ActivationLink activationLinkOld = activationLinkRepository.getLinkBySystemUserID(systemUser.getId());
+            activationLinkRepository.delete(activationLinkOld.getId());
+
             ActivationLink activationLink = new ActivationLink();
+
             activationLink.setEffectiveDate(toDateTime);
             activationLink.setUuid(uuid);
+            activationLink.setType(LinkType.restorePassword);
             activationLink.setSystemuserId(systemUser.getId());
 
             String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + uuid;
@@ -174,9 +179,7 @@ public class AuthServiceImpl implements AuthService {
             EmailRestorePassword emailRestorePassword = new EmailRestorePassword (request.getEmail(), restorePasswordLink);
             emailSender.sendEmail(emailRestorePassword);
 
-            activationLinkRepository.create(activationLink);
-
-            LOG.info("Activation link for restore password was successfully sent to user with email: " + systemUser.getEmail() +
+                  LOG.info("Activation link for restore password was successfully sent to user with email: " + systemUser.getEmail() +
                     ", status - " + systemUser.getStatus().toString() + ".");
 
             Activity activity = new Activity();

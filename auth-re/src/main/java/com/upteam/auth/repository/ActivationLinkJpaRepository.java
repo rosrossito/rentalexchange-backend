@@ -58,4 +58,16 @@ public class ActivationLinkJpaRepository implements ActivationLinkRepository {
         return result;
     }
 
+    @Override
+    public ActivationLink getLinkBySystemUserID(long systemuser_id) {
+        ActivationLink result;
+        TypedQuery<ActivationLink> q = em.createNamedQuery("ActivationLink.findBySystemUserID", ActivationLink.class);
+        q.setParameter("systemuser_id", systemuser_id);
+        try {
+            result = q.getSingleResult();
+        } catch (NoResultException e) {
+            result = null;
+        }
+        return result;
+    }
 }

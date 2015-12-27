@@ -13,7 +13,7 @@ public class SystemUser {
     @Id
     @SequenceGenerator(name = "systemuserseq", sequenceName = "systemuser_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuserseq")
-    private Long id;
+    private long id;
 
     String login;
 
@@ -29,7 +29,7 @@ public class SystemUser {
     public SystemUser() {
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
