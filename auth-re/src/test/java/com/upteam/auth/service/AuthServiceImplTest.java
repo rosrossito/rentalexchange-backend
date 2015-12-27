@@ -53,8 +53,8 @@ public class AuthServiceImplTest {
         ActivationLink activationLink = new ActivationLink();
 
         when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(user);
-        when(mockSystemUserRepository.create(user)).thenReturn(user);
-        when(mockActivationLinkRepository.create(activationLink)).thenReturn(activationLink);
+        when(mockSystemUserRepository.save(user)).thenReturn(user);
+        when(mockActivationLinkRepository.save(activationLink)).thenReturn(activationLink);
         when(mockEnv.getProperty(anyString())).thenReturn("property-value");
 
         authService.registration(request);

@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         systemUser.setEmail(request.getEmail());
         systemUser.setPassword(request.getPassword());
         systemUser.setStatus(SystemUserStatus.temporary);
-        systemUserRepository.create(systemUser);
+        systemUserRepository.save(systemUser);
 
         UUID uuidGenerator = UUID.randomUUID();
         String uuid = uuidGenerator.toString();
@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
         activationLink.setEffectiveDate(toDateTime);
         activationLink.setUuid(uuid);
         activationLink.setSystemuserId(systemUser.getId());
-        activationLinkRepository.create(activationLink);
+        activationLinkRepository.save(activationLink);
 
         String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/registration-confirm/" + uuid;
         EmailGenerator emailGeneratorRegistration =
@@ -83,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
         activity.setActivityType(ActivityType.systemUserRegistration);
         activity.setDescription("Registration user");
         activity.setActivityTime(LocalDateTime.now());
-        activityRepository.create(activity);
+        activityRepository.save(activity);
 
     }
 
@@ -105,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidConfirmRegistrationLinkException();
         }
 
-        SystemUser user = systemUserRepository.getById(link.getSystemuserId());
+        SystemUser user = systemUserRepository.findOne(link.getSystemuserId());
         if (user == null) {
             throw new InvalidConfirmRegistrationLinkException();
         }
@@ -114,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
         }
         user.setPassword(request.getPassword());
         user.setStatus(SystemUserStatus.active);
-        systemUserRepository.update(user);
+        systemUserRepository.save(user);
 
         String activateUserLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + user.getEmail();
         EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail(), activateUserLink);
@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
         activity.setActivityType(ActivityType.systemUserConfirmRegistration);
         activity.setDescription("Confirm registration user");
         activity.setActivityTime(LocalDateTime.now());
-        activityRepository.create(activity);
+        activityRepository.save(activity);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
 
             String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + uuid;
 
-            activationLinkRepository.create(activationLink);
+            activationLinkRepository.save(activationLink);
 
             EmailRestorePassword emailRestorePassword = new EmailRestorePassword (request.getEmail(), restorePasswordLink);
             emailSender.sendEmail(emailRestorePassword);
@@ -187,7 +187,7 @@ public class AuthServiceImpl implements AuthService {
             activity.setActivityType(ActivityType.systemUserRestorePassword);
             activity.setDescription("Restore password of user");
             activity.setActivityTime(LocalDateTime.now());
-            activityRepository.create(activity);
+            activityRepository.save(activity);
 
         }else {throw new AccountIsNotActiveException();}
         }else {throw new EmailIsAbsentException();}
