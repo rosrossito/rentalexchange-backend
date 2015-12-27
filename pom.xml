@@ -56,20 +56,6 @@
                     <groupId>org.liquibase</groupId>
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>3.4.1</version>
-                    <configuration>
-                        <driver>${dataSource.project.driverClass}</driver>
-                        <url>${dataSource.project.jdbcURL}</url>
-                        <username>${dataSource.project.user}</username>
-                        <password>${dataSource.project.password}</password>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>update</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

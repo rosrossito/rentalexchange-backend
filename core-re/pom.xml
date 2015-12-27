@@ -21,7 +21,6 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>3.4.1</version>
                         <configuration>
                             <driver>${dataSource.project.driverClass}</driver>
                             <url>${dataSource.project.jdbcURL}</url>
@@ -29,9 +28,7 @@
                             <password>${dataSource.project.password}</password>
                             <defaultSchemaName>rental</defaultSchemaName>
                             <changeLogFile>src/main/liquibase/deploy-schema.xml</changeLogFile>
-
                         </configuration>
-
                         <executions>
                             <execution>
                                 <phase>process-resources</phase>
@@ -40,7 +37,6 @@
                                 </goals>
                             </execution>
                         </executions>
-
                     </plugin>
                 </plugins>
             </build>
