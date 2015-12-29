@@ -6,6 +6,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * Created by Влад on 22.12.2015.
  */
 public class LoginRequestVO {
+
     @JsonProperty("email")
     private String email;
 

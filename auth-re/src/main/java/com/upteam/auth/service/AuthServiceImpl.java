@@ -6,6 +6,9 @@ import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistratio
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRestorePasswordRequest;
 import com.upteam.auth.domain.*;
+import com.upteam.auth.domain.domainenum.ActivityType;
+import com.upteam.auth.domain.domainenum.LinkType;
+import com.upteam.auth.domain.domainenum.SystemUserStatus;
 import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
@@ -55,7 +58,6 @@ public class AuthServiceImpl implements AuthService {
         }
         SystemUser systemUser = new SystemUser();
         systemUser.setEmail(request.getEmail());
-        systemUser.setPassword(request.getPassword());
         systemUser.setStatus(SystemUserStatus.temporary);
         systemUserRepository.save(systemUser);
 
@@ -83,7 +85,6 @@ public class AuthServiceImpl implements AuthService {
         activity.setDescription("Registration user");
         activity.setActivityTime(LocalDateTime.now());
         activityRepository.save(activity);
-
     }
 
     @Override
@@ -131,9 +132,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void login(LoginRequestVO request) {
+        if (request.getEmail() != null) {
+            throw new EmailIsAbsentException();
+        }
         SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
 
-        if (systemUser == null || systemUser.getEmail() == null || !systemUser.getPassword().equals(request.getPassword())) {
+        if (systemUser == null || !systemUser.getPassword().equals(request.getPassword())) {
             throw new IncorrectLoginException();
 
         } else if (systemUser.getStatus() == SystemUserStatus.temporary) {
@@ -142,7 +146,6 @@ public class AuthServiceImpl implements AuthService {
         } else if (systemUser.getStatus() == SystemUserStatus.blocked || systemUser.getStatus() == SystemUserStatus.delete) {
             throw new BlockedAccountException();
         }
-
     }
 
 

@@ -1,5 +1,7 @@
 package com.upteam.auth.domain;
 
+import com.upteam.auth.domain.domainenum.SystemUserStatus;
+
 import javax.persistence.*;
 
 /**
@@ -7,7 +9,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "systemuser")
-@NamedQuery(name="systemUser.findByMail", query = "select u from SystemUser u where u.email = :email")
 public class SystemUser {
 
     @Id

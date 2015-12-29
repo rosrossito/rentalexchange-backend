@@ -1,5 +1,7 @@
 package com.upteam.auth.domain;
 
+import com.upteam.auth.domain.domainenum.LinkType;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -8,10 +10,6 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "activationlink")
-@NamedQueries({
-        @NamedQuery(name = "ActivationLink.findByUUID", query = "select u from ActivationLink u where u.uuid = :uuid"),
-        @NamedQuery(name = "ActivationLink.findBySystemUserID", query = "select c from ActivationLink c where c.systemuserId = :systemuser_id")
-})
 public class ActivationLink {
 
     @Id

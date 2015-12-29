@@ -1,4 +1,4 @@
-package com.upteam.auth.domain;
+package com.upteam.auth.domain.domainenum;
 
 /**
  * Created by vnikolaev on 27.12.2015.

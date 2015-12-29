@@ -1,5 +1,7 @@
 package com.upteam.auth.domain;
 
+import com.upteam.auth.domain.domainenum.ActivityType;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -14,7 +16,6 @@ public class Activity {
     @SequenceGenerator(name = "activityseq", sequenceName = "activity_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activityseq")
     private Long id;
-
 
     private Long systemUserId;
 
