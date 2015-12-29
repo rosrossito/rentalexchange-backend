@@ -1,9 +1,6 @@
 package com.upteam.auth.controller;
 
 import com.upteam.auth.exception.*;
-import com.upteam.auth.exception.EmailIsAbsentException;
-import com.upteam.auth.exception.InvalidConfirmRegistrationLinkException;
-import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.vo.ErrorResponseValueObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,7 +16,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by olegls2000 on 12/23/2015.
