@@ -8,14 +8,14 @@ import java.util.Map;
 /**
  * Created by Администратор on 22.12.2015.
  */
-public class EmailRestorePassword implements EmailGenerator {
+public class EmailGeneratorRestorePasswordRequest implements EmailGenerator {
 
-    private static final String EMAIL_TEMPLATE = "emailtemplates/restorePassword.vm";
+    private static final String EMAIL_TEMPLATE = "emailtemplates/restorePasswordRequest.vm";
     private final String subject = "Exchange Rental. Инструкции по восстановлению пароля пользователя";
     private List<String> emailsTo = new ArrayList<String>();
     private String restorePasswordLink;
 
-    public EmailRestorePassword(String mailTo, String restorePasswordLink) {
+    public EmailGeneratorRestorePasswordRequest(String mailTo, String restorePasswordLink) {
         this.emailsTo.add(mailTo);
         this.restorePasswordLink = restorePasswordLink;
     }

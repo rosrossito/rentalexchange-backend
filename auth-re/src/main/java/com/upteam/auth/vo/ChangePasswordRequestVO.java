@@ -7,19 +7,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 public class ChangePasswordRequestVO {
 
-    @JsonProperty("login")
-    private String login;
-
     @JsonProperty("email")
     private String email;
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
 
     public String getEmail() {
         return email;

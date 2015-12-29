@@ -4,7 +4,7 @@ import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistration;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
-import com.upteam.auth.component.emailgenerator.EmailRestorePassword;
+import com.upteam.auth.component.emailgenerator.EmailGeneratorRestorePasswordRequest;
 import com.upteam.auth.domain.*;
 import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
@@ -45,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private ActivityRepository activityRepository;
 
-
     @Resource
     private Environment env;
 
@@ -70,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
         activationLink.setSystemuserId(systemUser.getId());
         activationLinkRepository.save(activationLink);
 
-        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/registration-confirm/" + uuid;
+        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/registration-confirm/?uuid=" + uuid;
         EmailGenerator emailGeneratorRegistration =
                 new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
         emailSender.sendEmail(emailGeneratorRegistration);
@@ -149,50 +148,41 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void changePasswordRequest(ChangePasswordRequestVO request) {
+        if (request.getEmail() != null) {
+            throw new EmailIsAbsentException();
+        }
+        SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
+        if (systemUser == null || systemUser.getStatus() != SystemUserStatus.active) {
+            throw new NonActiveAccountException();
+        }
+        UUID uuidGenerator = UUID.randomUUID();
+        String uuid = uuidGenerator.toString();
+        LocalDateTime toDateTime = LocalDateTime.now();
 
-        if(request.getEmail()!=null) {
-        if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
+        ActivationLink activationLinkOld = activationLinkRepository.getLinkBySystemUserID(systemUser.getId());
+        activationLinkRepository.delete(activationLinkOld.getId());
 
-            SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
-            systemUser.setEmail(request.getEmail());
-            systemUser.setLogin(request.getLogin());
+        ActivationLink activationLink = new ActivationLink();
 
-            UUID uuidGenerator = UUID.randomUUID();
-            String uuid = uuidGenerator.toString();
-            LocalDateTime toDateTime = LocalDateTime.now();
+        activationLink.setEffectiveDate(toDateTime);
+        activationLink.setUuid(uuid);
+        activationLink.setType(LinkType.restorePassword);
+        activationLink.setSystemuserId(systemUser.getId());
 
+        String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/change-password?uuid=" + uuid;
 
-            ActivationLink activationLinkOld = activationLinkRepository.getLinkBySystemUserID(systemUser.getId());
-            activationLinkRepository.delete(activationLinkOld.getId());
+        activationLinkRepository.save(activationLink);
 
-            ActivationLink activationLink = new ActivationLink();
+        EmailGeneratorRestorePasswordRequest emailRestorePassword = new EmailGeneratorRestorePasswordRequest(request.getEmail(), restorePasswordLink);
+        emailSender.sendEmail(emailRestorePassword);
 
-            activationLink.setEffectiveDate(toDateTime);
-            activationLink.setUuid(uuid);
-            activationLink.setType(LinkType.restorePassword);
-            activationLink.setSystemuserId(systemUser.getId());
+        Activity activity = new Activity();
+        activity.setSystemUserId(systemUser.getId());
+        activity.setActivityType(ActivityType.systemUserRestorePassword);
+        activity.setDescription("Restore password of user");
+        activity.setActivityTime(LocalDateTime.now());
+        activityRepository.save(activity);
 
-            String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + uuid;
-
-            activationLinkRepository.save(activationLink);
-
-            EmailRestorePassword emailRestorePassword = new EmailRestorePassword (request.getEmail(), restorePasswordLink);
-            emailSender.sendEmail(emailRestorePassword);
-
-                  LOG.info("Activation link for restore password was successfully sent to user with email: " + systemUser.getEmail() +
-                    ", status - " + systemUser.getStatus().toString() + ".");
-
-            Activity activity = new Activity();
-            activity.setSystemUserId(systemUser.getId());
-            activity.setActivityType(ActivityType.systemUserRestorePassword);
-            activity.setDescription("Restore password of user");
-            activity.setActivityTime(LocalDateTime.now());
-            activityRepository.save(activity);
-
-        }else {throw new AccountIsNotActiveException();}
-        }else {throw new EmailIsAbsentException();}
-
-
+        LOG.info("Link to the web page for restore password was successfully sent to user with email: " + systemUser.getEmail() + ".");
     }
-
 }

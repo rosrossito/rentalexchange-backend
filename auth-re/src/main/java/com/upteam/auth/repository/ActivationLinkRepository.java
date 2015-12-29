@@ -17,8 +17,6 @@ public interface ActivationLinkRepository extends JpaRepository<ActivationLink, 
     @Query("select c from ActivationLink c where c.systemuserId = :systemuser_id")
     ActivationLink getLinkBySystemUserID(@Param("systemuser_id") Long systemuser_id);
 
-
-
     @Query("select u from ActivationLink u where u.uuid = :uuid")
     ActivationLink getLinkByUUID(@Param("uuid")String uuid);
 }
