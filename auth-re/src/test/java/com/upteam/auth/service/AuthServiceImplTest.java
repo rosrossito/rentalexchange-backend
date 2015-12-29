@@ -1,6 +1,8 @@
 package com.upteam.auth.service;
 
 import com.upteam.auth.component.EmailSender;
+import com.upteam.auth.component.emailgenerator.EmailGenerator;
+import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.exception.UserAlreadyExistException;
@@ -16,7 +18,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -52,6 +56,7 @@ public class AuthServiceImplTest {
         request.setEmail(TEST_EMAIL);
         SystemUser user = new SystemUser();
         ActivationLink activationLink = new ActivationLink();
+        EmailGenerator emailGenerator = new EmailGeneratorRegistration(TEST_EMAIL, "", user);
 
         when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(user);
         when(mockSystemUserRepository.save(user)).thenReturn(user);
@@ -59,5 +64,13 @@ public class AuthServiceImplTest {
         when(mockEnv.getProperty(anyString())).thenReturn("property-value");
 
         authService.registration(request);
+
+        verify(mockSystemUserRepository).searchByEmail("saxc");
+        //verify(mockSystemUserRepository).save((SystemUser)anyObject());
+        //verify(mockActivationLinkRepository).save((ActivationLink)anyObject());
+
+        //verify(mockEmailSender).sendEmail(emailGenerator);
+
+
     }
 }
