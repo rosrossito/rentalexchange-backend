@@ -15,10 +15,7 @@ import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
-import com.upteam.auth.vo.ChangePasswordRequestVO;
-import com.upteam.auth.vo.LoginRequestVO;
-import com.upteam.auth.vo.RegistrationConfirmRequestVO;
-import com.upteam.auth.vo.RegistrationRequestVO;
+import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -189,5 +187,41 @@ public class AuthServiceImpl implements AuthService {
         activityRepository.save(activity);
 
         LOG.info("Link to the web page for restore password was successfully sent to user with email: " + systemUser.getEmail() + ".");
+    }
+
+    @Override
+    public void changePassword(ChangePasswordVO request) {
+
+        ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
+        //link missing or wrong link type check
+        if (link == null || link.getType() != LinkType.changePassword ){
+            throw new InvalidChangePasswordLinkException();
+        }
+        //link overdue check
+        long linkLifePeriodSec = Long.valueOf(env.getProperty("activation.link.period"));
+        LocalDateTime permissibleLinkLifetime = link.getEffectiveDate().plusSeconds(linkLifePeriodSec);
+        if (LocalDateTime.now().isAfter(permissibleLinkLifetime)) {
+            activationLinkRepository.delete(link.getId());
+            throw new InvalidChangePasswordLinkException();
+        }
+        //user missing and wrong user status check
+        SystemUser user = systemUserRepository.findOne(link.getSystemuserId());
+        if (user == null) {
+            throw new InvalidChangePasswordLinkException();
+        }
+        if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
+            throw new SystemUserProblemException();
+        }
+        //renewing user password
+        user.setPassword(request.getPassword());
+        systemUserRepository.save(user);
+        //sending email and link delete
+        String activateUserLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + user.getEmail();
+        EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail(), activateUserLink);
+
+        emailSender.sendEmail(confirmRegistrationEmail);
+        activationLinkRepository.delete(link.getId());
+
+
     }
 }

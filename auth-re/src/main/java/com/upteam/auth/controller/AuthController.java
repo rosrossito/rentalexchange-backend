@@ -1,12 +1,11 @@
 package com.upteam.auth.controller;
 
+import com.upteam.auth.exception.InvalidChangePasswordLinkException;
+import com.upteam.auth.exception.NonActiveAccountException;
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
-import com.upteam.auth.vo.ChangePasswordRequestVO;
-import com.upteam.auth.vo.LoginRequestVO;
-import com.upteam.auth.vo.RegistrationConfirmRequestVO;
-import com.upteam.auth.vo.RegistrationRequestVO;
+import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +45,8 @@ public class AuthController {
         authService.changePasswordRequest(request);
     }
 
+    @RequestMapping(value = "/user/change-password", method = RequestMethod.POST)
+    @ResponseBody
+    void changePasswond(@RequestBody ChangePasswordVO request) { authService.changePassword(request);}
 
 }
