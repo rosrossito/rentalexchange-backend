@@ -69,6 +69,13 @@ public class ExceptionHandlerController {
         return getErrorVO(e);
     }
 
+    @ExceptionHandler(InvalidChangePasswordLinkException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject invalidPasswordLinkHandler(InvalidChangePasswordLinkException e) {
+        return getErrorVO(e);
+    }
+
     private ErrorResponseValueObject getErrorVO(Throwable throwable) {
         ErrorResponseValueObject result = new ErrorResponseValueObject();
         result.setReason(throwable.getMessage());

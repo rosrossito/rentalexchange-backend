@@ -207,7 +207,7 @@ public class AuthServiceImpl implements AuthService {
         //user missing and wrong user status check
         SystemUser user = systemUserRepository.findOne(link.getSystemuserId());
         if (user == null) {
-            throw new InvalidChangePasswordLinkException();
+            throw new SystemUserProblemException();
         }
         if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
             throw new SystemUserProblemException();
@@ -216,11 +216,10 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(request.getPassword());
         systemUserRepository.save(user);
         //sending email and link delete
-        String activateUserLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + user.getEmail();
-        EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail(), activateUserLink);
+        //EmailGenerator confirmRegistrationEmail = new EmailGeneratorAndrey(fldkl);
 
-        emailSender.sendEmail(confirmRegistrationEmail);
-        activationLinkRepository.delete(link.getId());
+        //emailSender.sendEmail(confirmRegistrationEmail);
+        //activationLinkRepository.delete(link.getId());
 
 
     }

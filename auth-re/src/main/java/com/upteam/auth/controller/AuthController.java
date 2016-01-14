@@ -30,7 +30,7 @@ public class AuthController {
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)
     @ResponseBody
-    void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request)  {
+    void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request) {
         authService.confirmRegistration(request);
     }
 
@@ -47,6 +47,8 @@ public class AuthController {
 
     @RequestMapping(value = "/user/change-password", method = RequestMethod.POST)
     @ResponseBody
-    void changePasswond(@RequestBody ChangePasswordVO request) { authService.changePassword(request);}
+    void changePassword(@RequestBody ChangePasswordVO request) {
+        authService.changePassword(request);
+    }
 
 }
