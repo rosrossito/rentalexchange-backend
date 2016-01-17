@@ -26,7 +26,6 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import java.time.LocalDateTime;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -53,9 +52,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void registration(RegistrationRequestVO request) {
+        if (request == null) {
+            throw new InvalidRequestException();
+        }
+        if (request.getEmail() == null) {
+            throw new EmailIsAbsentException();
+        }
         if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
             throw new UserAlreadyExistException();
         }
+
         SystemUser systemUser = new SystemUser();
         systemUser.setEmail(request.getEmail());
         systemUser.setStatus(SystemUserStatus.temporary);
@@ -118,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
 
         String activateUserLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/" + user.getEmail();
         EmailGeneratorConfirmRegistration confirmRegistrationEmail = new EmailGeneratorConfirmRegistration(user.getEmail(), activateUserLink);
-
+        System.out.println(activateUserLink);
         emailSender.sendEmail(confirmRegistrationEmail);
         activationLinkRepository.delete(link.getId());
 
@@ -194,7 +200,7 @@ public class AuthServiceImpl implements AuthService {
 
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         //link missing or wrong link type check
-        if (link == null || link.getType() != LinkType.changePassword ){
+        if (link == null || link.getType() != LinkType.changePassword) {
             throw new InvalidChangePasswordLinkException();
         }
         //link overdue check

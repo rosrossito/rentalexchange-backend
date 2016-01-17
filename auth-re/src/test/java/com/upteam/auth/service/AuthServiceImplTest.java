@@ -5,6 +5,8 @@ import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.exception.EmailIsAbsentException;
+import com.upteam.auth.exception.InvalidRequestException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
@@ -18,7 +20,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,12 +66,22 @@ public class AuthServiceImplTest {
 
         authService.registration(request);
 
-        verify(mockSystemUserRepository).searchByEmail("saxc");
+        verify(mockSystemUserRepository).searchByEmail(anyString());
         //verify(mockSystemUserRepository).save((SystemUser)anyObject());
         //verify(mockActivationLinkRepository).save((ActivationLink)anyObject());
-
         //verify(mockEmailSender).sendEmail(emailGenerator);
+    }
 
+    @Test(expected = EmailIsAbsentException.class)
+    public void registrationWillThrowEmailIsAbsentException() {
+        RegistrationRequestVO request = new RegistrationRequestVO();
+        request.setEmail(null);
+        authService.registration(request);
+    }
 
+    @Test(expected = InvalidRequestException.class)
+    public void registrationWillThrowInvalidRequestException() {
+        RegistrationRequestVO request = null;
+        authService.registration(request);
     }
 }
