@@ -47,7 +47,7 @@ public class AuthController {
 
     @RequestMapping(value = "/user/change-password", method = RequestMethod.POST)
     @ResponseBody
-    void changePassword(@RequestBody ChangePasswordVO request) {
+    void changePasswond(@RequestBody ChangePasswordVO request) {
         authService.changePassword(request);
     }
 

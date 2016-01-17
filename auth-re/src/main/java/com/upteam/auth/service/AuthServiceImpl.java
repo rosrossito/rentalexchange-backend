@@ -227,6 +227,11 @@ public class AuthServiceImpl implements AuthService {
         //emailSender.sendEmail(confirmRegistrationEmail);
         //activationLinkRepository.delete(link.getId());
 
-
+        Activity activity = new Activity();
+        activity.setSystemUserId(user.getId());
+        activity.setActivityType(ActivityType.systemUserChangePassword);
+        activity.setDescription("User password change");
+        activity.setActivityTime(LocalDateTime.now());
+        activityRepository.save(activity);
     }
 }
