@@ -138,9 +138,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void login(LoginRequestVO request) {
-      /*  if (request == null) {
+        if (request == null) {
             throw new InvalidRequestException();
-        }*/
+        }
         if (request.getEmail() == null) {
             throw new EmailIsAbsentException();
         }

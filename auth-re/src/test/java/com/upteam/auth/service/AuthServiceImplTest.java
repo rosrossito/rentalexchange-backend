@@ -110,24 +110,32 @@ public class AuthServiceImplTest {
 
     @Test(expected = NonActiveAccountException.class)
     public void loginWillThrowNonActiveAccountException() {
+        SystemUser systemUser = new SystemUser();
+        systemUser.setEmail(TEST_EMAIL);
+        systemUser.setPassword(TEST_PASSWORD);
+        systemUser.setStatus(SystemUserStatus.temporary);
+        mockSystemUserRepository.save(systemUser);
 
         LoginRequestVO request = new LoginRequestVO();
         request.setEmail(TEST_EMAIL);
         request.setPassword(TEST_PASSWORD);
-        SystemUser systemUser = mockSystemUserRepository.searchByEmail(TEST_EMAIL);
-        systemUser.setStatus(SystemUserStatus.temporary);
+        when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
         authService.login(request);
 
     }
 
     @Test(expected = BlockedAccountException.class)
     public void loginWillThrowBlockedAccountException() {
+        SystemUser systemUser = new SystemUser();
+        systemUser.setEmail(TEST_EMAIL);
+        systemUser.setPassword(TEST_PASSWORD);
+        systemUser.setStatus(SystemUserStatus.blocked);
+        mockSystemUserRepository.save(systemUser);
 
         LoginRequestVO request = new LoginRequestVO();
         request.setEmail(TEST_EMAIL);
         request.setPassword(TEST_PASSWORD);
-        SystemUser systemUser = mockSystemUserRepository.searchByEmail(TEST_EMAIL);
-        systemUser.setStatus(SystemUserStatus.blocked);
+        when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
         authService.login(request);
 
     }
@@ -147,7 +155,7 @@ public class AuthServiceImplTest {
 
         when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
         authService.login(request);
-        verify(mockSystemUserRepository.searchByEmail(TEST_EMAIL));
+        verify(mockSystemUserRepository).searchByEmail(anyString());
 
     }
 
