@@ -53,8 +53,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void registration(RegistrationRequestVO request) {
-        if(request==null) {
-
+        if (request == null) {
+            throw new InvalidRequestException();
+        }
+        if (request.getEmail() == null) {
+            throw new EmailIsAbsentException();
         }
         if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
             throw new UserAlreadyExistException();
@@ -226,7 +229,12 @@ public class AuthServiceImpl implements AuthService {
 
         //emailSender.sendEmail(confirmRegistrationEmail);
         //activationLinkRepository.delete(link.getId());
-
+        Activity activity = new Activity();
+        activity.setSystemUserId(user.getId());
+        activity.setActivityType(ActivityType.systemUserChangePassword);
+        activity.setDescription("User password change");
+        activity.setActivityTime(LocalDateTime.now());
+        activityRepository.save(activity);
 
     }
 }
