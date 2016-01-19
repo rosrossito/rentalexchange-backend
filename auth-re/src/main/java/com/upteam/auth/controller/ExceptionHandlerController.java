@@ -76,6 +76,13 @@ public class ExceptionHandlerController {
         return getErrorVO(e);
     }
 
+    @ExceptionHandler(InvalidRequestException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject InvalidRequest(InvalidRequestException e) {
+        return getErrorVO(e);
+    }
+
     private ErrorResponseValueObject getErrorVO(Throwable throwable) {
         ErrorResponseValueObject result = new ErrorResponseValueObject();
         result.setReason(throwable.getMessage());
