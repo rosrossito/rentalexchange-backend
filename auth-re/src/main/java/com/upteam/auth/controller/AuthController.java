@@ -22,7 +22,7 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
-    @CrossOrigin(origins = {"http://rental.com:63342", "http://localhost:63342"})
+    //@CrossOrigin(origins = {"http://rental.com:63342", "http://localhost:63342"})
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     void userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
         authService.registration(request);
