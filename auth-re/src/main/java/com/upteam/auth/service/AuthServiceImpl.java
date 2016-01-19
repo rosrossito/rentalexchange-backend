@@ -132,9 +132,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void login(LoginRequestVO request) {
-        if (request.getEmail() != null) {
+      /*  if (request == null) {
+            throw new InvalidRequestException();
+        }*/
+        if (request.getEmail() == null) {
             throw new EmailIsAbsentException();
         }
+
         SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
 
         if (systemUser == null || !systemUser.getPassword().equals(request.getPassword())) {
@@ -194,7 +198,7 @@ public class AuthServiceImpl implements AuthService {
 
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         //link missing or wrong link type check
-        if (link == null || link.getType() != LinkType.changePassword ){
+        if (link == null || link.getType() != LinkType.changePassword) {
             throw new InvalidChangePasswordLinkException();
         }
         //link overdue check

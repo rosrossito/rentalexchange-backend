@@ -5,9 +5,11 @@ import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.SystemUser;
-import com.upteam.auth.exception.UserAlreadyExistException;
+import com.upteam.auth.domain.domainenum.SystemUserStatus;
+import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
+import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 public class AuthServiceImplTest {
 
     private static final String TEST_EMAIL = "test@test.com";
+    private static final String TEST_PASSWORD = "qa1234";
 
     @Mock
     private SystemUserRepository mockSystemUserRepository;
@@ -73,4 +76,67 @@ public class AuthServiceImplTest {
 
 
     }
+
+    @Test(expected = EmailIsAbsentException.class)
+    public void loginWillThrowEmailIsAbsentException() {
+
+        LoginRequestVO request = new LoginRequestVO();
+        request.setEmail(null);
+        authService.login(request);
+
+    }
+
+    @Test(expected = IncorrectLoginException.class)
+    public void loginWillThrowIncorrectLoginException() {
+
+        LoginRequestVO request = new LoginRequestVO();
+        request.setEmail(TEST_EMAIL);
+        request.setPassword(TEST_PASSWORD);
+        authService.login(request);
+
+    }
+
+    @Test(expected = NonActiveAccountException.class)
+    public void loginWillThrowNonActiveAccountException() {
+
+        LoginRequestVO request = new LoginRequestVO();
+        request.setEmail(TEST_EMAIL);
+        request.setPassword(TEST_PASSWORD);
+        SystemUser systemUser = mockSystemUserRepository.searchByEmail(TEST_EMAIL);
+        systemUser.setStatus(SystemUserStatus.temporary);
+        authService.login(request);
+
+    }
+
+    @Test(expected = BlockedAccountException.class)
+    public void loginWillThrowBlockedAccountException() {
+
+        LoginRequestVO request = new LoginRequestVO();
+        request.setEmail(TEST_EMAIL);
+        request.setPassword(TEST_PASSWORD);
+        SystemUser systemUser = mockSystemUserRepository.searchByEmail(TEST_EMAIL);
+        systemUser.setStatus(SystemUserStatus.blocked);
+        authService.login(request);
+
+    }
+
+    @Test
+    public void positiveLoginScenario() {
+
+        SystemUser systemUser = new SystemUser();
+        systemUser.setEmail(TEST_EMAIL);
+        systemUser.setPassword(TEST_PASSWORD);
+        systemUser.setStatus(SystemUserStatus.active);
+        mockSystemUserRepository.save(systemUser);
+
+        LoginRequestVO request = new LoginRequestVO();
+        request.setEmail(TEST_EMAIL);
+        request.setPassword(TEST_PASSWORD);
+
+        when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
+        authService.login(request);
+        verify(mockSystemUserRepository.searchByEmail(TEST_EMAIL));
+
+    }
+
 }
