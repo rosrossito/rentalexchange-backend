@@ -95,7 +95,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
+        if (request == null) {
+            throw new InvalidRequestException();
+        }
+        if (request.getPassword() == null) {
+            throw new PasswordAbsentException();
+        }
 
+        if (request.getUuid() == null) {
+            throw new UuidAbsentException();
+        }
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
 
         if (link == null || link.getType() != LinkType.confirmRegistration) {
@@ -203,7 +212,7 @@ public class AuthServiceImpl implements AuthService {
 
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         //link missing or wrong link type check
-        if (link == null || link.getType() != LinkType.changePassword ){
+        if (link == null || link.getType() != LinkType.changePassword) {
             throw new InvalidChangePasswordLinkException();
         }
         //link overdue check

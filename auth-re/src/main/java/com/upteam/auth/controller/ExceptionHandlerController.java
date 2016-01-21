@@ -90,4 +90,18 @@ public class ExceptionHandlerController {
         return result;
     }
 
+    @ExceptionHandler(PasswordAbsentException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject passwordAbsent(PasswordAbsentException e) {
+        return getErrorVO(e);
+    }
+
+    @ExceptionHandler(UuidAbsentException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject uuidAbsent(UuidAbsentException e) {
+        return getErrorVO(e);
+    }
+
 }

@@ -5,6 +5,7 @@ import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.domain.domainenum.LinkType;
 import com.upteam.auth.exception.EmailIsAbsentException;
 import com.upteam.auth.exception.InvalidRequestException;
 import com.upteam.auth.exception.UserAlreadyExistException;
@@ -13,6 +14,7 @@ import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.LoginRequestVO;
+import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +25,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
+import java.time.LocalDateTime;
+
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,6 +41,9 @@ public class AuthServiceImplTest {
 
     private static final String TEST_EMAIL = "test@test.com";
     private static final String TEST_PASSWORD = "qa1234";
+    private static final String TEST_UUID = "987654321";
+    private static final long TEST_ID = 23;
+
 
     @Mock
     private SystemUserRepository mockSystemUserRepository;
@@ -156,6 +164,115 @@ public class AuthServiceImplTest {
         when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
         authService.login(request);
         verify(mockSystemUserRepository).searchByEmail(anyString());
+
+
+    }
+
+    @Test(expected = PasswordAbsentException.class)
+    public void confirmRegistrationWillThrowPasswordAbsentException() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(null);
+        authService.confirmRegistration(request);
+    }
+
+    @Test(expected = UuidAbsentException.class)
+    public void confirmRegistrationWillThrowUuidAbsentException() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(TEST_PASSWORD);
+        request.setUuid(null);
+        authService.confirmRegistration(request);
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void confirmRegistrationWillThrowInvalidRequestException() {
+        RegistrationConfirmRequestVO request = null;
+        authService.confirmRegistration(request);
+    }
+
+    @Test(expected = InvalidConfirmRegistrationLinkException.class)
+    public void confirmRegistrationWillThrowInvalidConfirmRegistrationLinkExceptionByNullLink() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(TEST_PASSWORD);
+        request.setUuid(TEST_UUID);
+        ActivationLink link = null;
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(link);
+        authService.confirmRegistration(request);
+        verify(mockActivationLinkRepository).getLinkByUUID(anyString());
+    }
+
+    @Test(expected = InvalidConfirmRegistrationLinkException.class)
+    public void confirmRegistrationWillThrowInvalidConfirmRegistrationLinkExceptionByLinkTypeRestorePassword() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(TEST_PASSWORD);
+        request.setUuid(TEST_UUID);
+        ActivationLink link = new ActivationLink();
+        link.setType(LinkType.restorePassword);
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(link);
+        authService.confirmRegistration(request);
+        verify(mockActivationLinkRepository).getLinkByUUID(anyString());
+    }
+
+    @Test(expected = InvalidConfirmRegistrationLinkException.class)
+    public void confirmRegistrationWillThrowInvalidConfirmRegistrationLinkExceptionByLinkTypeChangePassword() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(TEST_PASSWORD);
+        request.setUuid(TEST_UUID);
+        ActivationLink link = new ActivationLink();
+        link.setType(LinkType.changePassword);
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(link);
+        authService.confirmRegistration(request);
+        verify(mockActivationLinkRepository).getLinkByUUID(anyString());
+    }
+
+    @Test(expected = InvalidConfirmRegistrationLinkException.class)
+    public void confirmRegistrationWillThrowInvalidConfirmRegistrationLinkExceptionByActivationLinkPeriod() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(TEST_PASSWORD);
+        request.setUuid(TEST_UUID);
+        ActivationLink link = new ActivationLink();
+        link.setType(LinkType.confirmRegistration);
+        link.setEffectiveDate(LocalDateTime.now().minusMinutes(500));
+        when(mockEnv.getProperty(anyString())).thenReturn("300");
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(link);
+        authService.confirmRegistration(request);
+        verify(mockActivationLinkRepository).getLinkByUUID(anyString());
+
+    }
+
+    @Test(expected = InvalidConfirmRegistrationLinkException.class)
+    public void confirmRegistrationWillThrowInvalidConfirmRegistrationLinkExceptionByNullUser() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(TEST_PASSWORD);
+        request.setUuid(TEST_UUID);
+        ActivationLink link = new ActivationLink();
+        link.setType(LinkType.confirmRegistration);
+        link.setEffectiveDate(LocalDateTime.now().minusSeconds(2));
+        SystemUser user = null;
+        when(mockEnv.getProperty(anyString())).thenReturn("300");
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(link);
+        when(mockSystemUserRepository.findOne(TEST_ID)).thenReturn(user);
+        authService.confirmRegistration(request);
+        verify(mockActivationLinkRepository).getLinkByUUID(anyString());
+        verify(mockSystemUserRepository.findOne(anyLong()));
+
+    }
+
+    @Test(expected = InvalidConfirmRegistrationLinkException.class)
+    public void confirmRegistrationWillThrowSystemUserProblemException() {
+        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
+        request.setPassword(TEST_PASSWORD);
+        request.setUuid(TEST_UUID);
+        ActivationLink link = new ActivationLink();
+        link.setType(LinkType.confirmRegistration);
+        link.setEffectiveDate(LocalDateTime.now().minusSeconds(2));
+        SystemUser user = new SystemUser();
+        user.setStatus(SystemUserStatus.delete);
+        when(mockEnv.getProperty(anyString())).thenReturn("300");
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(link);
+        when(mockSystemUserRepository.findOne(TEST_ID)).thenReturn(user);
+        authService.confirmRegistration(request);
+        verify(mockActivationLinkRepository).getLinkByUUID(anyString());
+        verify(mockSystemUserRepository.findOne(anyLong()));
 
     }
 
