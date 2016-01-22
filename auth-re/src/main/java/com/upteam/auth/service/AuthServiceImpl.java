@@ -1,10 +1,7 @@
 package com.upteam.auth.service;
 
 import com.upteam.auth.component.EmailSender;
-import com.upteam.auth.component.emailgenerator.EmailGenerator;
-import com.upteam.auth.component.emailgenerator.EmailGeneratorConfirmRegistration;
-import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
-import com.upteam.auth.component.emailgenerator.EmailGeneratorRestorePasswordRequest;
+import com.upteam.auth.component.emailgenerator.*;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.Activity;
 import com.upteam.auth.domain.SystemUser;
@@ -74,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
         ActivationLink activationLink = new ActivationLink();
         activationLink.setEffectiveDate(toDateTime);
         activationLink.setUuid(uuid);
+        activationLink.setType(LinkType.confirmRegistration);
         activationLink.setSystemuserId(systemUser.getId());
         activationLinkRepository.save(activationLink);
 
@@ -170,7 +168,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void changePasswordRequest(ChangePasswordRequestVO request) {
-        if (request.getEmail() != null) {
+        if (request == null) {
+            throw new InvalidRequestException();
+        }
+        if (request.getEmail() == null) {
             throw new EmailIsAbsentException();
         }
         SystemUser systemUser = systemUserRepository.searchByEmail(request.getEmail());
@@ -182,13 +183,14 @@ public class AuthServiceImpl implements AuthService {
         LocalDateTime toDateTime = LocalDateTime.now();
 
         ActivationLink activationLinkOld = activationLinkRepository.getLinkBySystemUserID(systemUser.getId());
-        activationLinkRepository.delete(activationLinkOld.getId());
-
+        if(activationLinkOld != null) {
+            activationLinkRepository.delete(activationLinkOld.getId());
+        }
         ActivationLink activationLink = new ActivationLink();
 
         activationLink.setEffectiveDate(toDateTime);
         activationLink.setUuid(uuid);
-        activationLink.setType(LinkType.restorePassword);
+        activationLink.setType(LinkType.changePassword);
         activationLink.setSystemuserId(systemUser.getId());
 
         String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/change-password?uuid=" + uuid;
@@ -210,7 +212,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void changePassword(ChangePasswordVO request) {
-
+        if (request == null) {
+            throw new InvalidRequestException();
+        }
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         //link missing or wrong link type check
         if (link == null || link.getType() != LinkType.changePassword) {
@@ -235,10 +239,11 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(request.getPassword());
         systemUserRepository.save(user);
         //sending email and link delete
-        //EmailGenerator confirmRegistrationEmail = new EmailGeneratorAndrey(fldkl);
+        EmailGenerator confirmRegistrationEmail = new EmailGeneratorChangePassword(user.getEmail());
 
-        //emailSender.sendEmail(confirmRegistrationEmail);
-        //activationLinkRepository.delete(link.getId());
+        emailSender.sendEmail(confirmRegistrationEmail);
+        activationLinkRepository.delete(link.getId());
+        //activity
         Activity activity = new Activity();
         activity.setSystemUserId(user.getId());
         activity.setActivityType(ActivityType.systemUserChangePassword);
