@@ -62,6 +62,9 @@ public class AuthServiceImplTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    //public void registration(RegistrationRequestVO request)-----------------------------------------------------------
+    // TESTS METHODS:
+
     @Test(expected = UserAlreadyExistException.class)
     public void registrationWillThrowUserAlreadyExistException() {
 
@@ -79,9 +82,6 @@ public class AuthServiceImplTest {
         authService.registration(request);
 
         verify(mockSystemUserRepository).searchByEmail(anyString());
-        //verify(mockSystemUserRepository).save((SystemUser)anyObject());
-        //verify(mockActivationLinkRepository).save((ActivationLink)anyObject());
-        //verify(mockEmailSender).sendEmail(emailGenerator);
     }
 
     @Test(expected = EmailIsAbsentException.class)
@@ -97,23 +97,25 @@ public class AuthServiceImplTest {
         authService.registration(request);
     }
 
+    //TODO - add positive scenario
+
+
+    //public void login(LoginRequestVO request)-------------------------------------------------------------------------
+    // TESTS METHODS:
+
     @Test(expected = EmailIsAbsentException.class)
     public void loginWillThrowEmailIsAbsentException() {
-
         LoginRequestVO request = new LoginRequestVO();
         request.setEmail(null);
         authService.login(request);
-
     }
 
     @Test(expected = IncorrectLoginException.class)
     public void loginWillThrowIncorrectLoginException() {
-
         LoginRequestVO request = new LoginRequestVO();
         request.setEmail(TEST_EMAIL);
         request.setPassword(TEST_PASSWORD);
         authService.login(request);
-
     }
 
     @Test(expected = NonActiveAccountException.class)
@@ -167,6 +169,9 @@ public class AuthServiceImplTest {
 
 
     }
+
+    //public void confirmRegistration(RegistrationConfirmRequestVO request)---------------------------------------------
+    // TESTS METHODS:
 
     @Test(expected = PasswordAbsentException.class)
     public void confirmRegistrationWillThrowPasswordAbsentException() {
@@ -275,5 +280,16 @@ public class AuthServiceImplTest {
         verify(mockSystemUserRepository.findOne(anyLong()));
 
     }
+
+    //public void changePasswordRequest(ChangePasswordRequestVO request)------------------------------------------------
+    // TESTS METHODS:
+    //TODO: coverage method...
+
+
+    //public void changePassword(ChangePasswordVO request)--------------------------------------------------------------
+    // TESTS METHODS:
+    //TODO: coverage method...
+
+
 
 }

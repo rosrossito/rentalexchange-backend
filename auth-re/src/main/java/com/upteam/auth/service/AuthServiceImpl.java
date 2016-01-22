@@ -145,6 +145,7 @@ public class AuthServiceImpl implements AuthService {
         activityRepository.save(activity);
     }
 
+    //TODO need modify for oAuth2.0 technology
     @Override
     public void login(LoginRequestVO request) {
         if (request == null) {
