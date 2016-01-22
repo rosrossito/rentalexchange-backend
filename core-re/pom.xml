@@ -12,36 +12,30 @@
     <name>Core-Rental-Exchange</name>
     <packaging>pom</packaging>
 
-
-    <profiles>
-        <profile>
-            <id>deployDBSchema</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.liquibase</groupId>
-                        <artifactId>liquibase-maven-plugin</artifactId>
-                        <configuration>
-                            <driver>${dataSource.project.driverClass}</driver>
-                            <url>${dataSource.project.jdbcURL}</url>
-                            <username>${dataSource.project.user}</username>
-                            <password>${dataSource.project.password}</password>
-                            <defaultSchemaName>rental</defaultSchemaName>
-                            <changeLogFile>src/main/liquibase/deploy-schema.xml</changeLogFile>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>update</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <configuration>
+                    <driver>${dataSource.project.driverClass}</driver>
+                    <url>${dataSource.project.jdbcURL}</url>
+                    <username>${dataSource.project.user}</username>
+                    <password>${dataSource.project.password}</password>
+                    <defaultSchemaName>rental</defaultSchemaName>
+                    <changeLogFile>src/main/liquibase/deploy-schema.xml</changeLogFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>

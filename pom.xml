@@ -12,7 +12,6 @@
 
     <modules>
         <module>auth-re</module>
-        <module>core-re</module>
         <module>app-re</module>
     </modules>
 
@@ -69,6 +68,14 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+       <profile>
+          <id>deployDBSchema</id>
+           <modules>
+               <module>core-re</module>
+           </modules>
+        </profile>
+      </profiles>
     <build>
         <pluginManagement>
             <plugins>
