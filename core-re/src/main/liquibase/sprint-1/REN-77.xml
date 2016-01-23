@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="27122015-04" author="vnikolaev">
+        <comment>Create table for store user activity</comment>
+        <createTable tableName="activity">
+            <column name="ID" type="bigint" remarks="Create column for activity Id">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="SYSTEM_USER_ID" type="bigint" remarks="Create column for user Id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACTIVITY_TYPE" type="varchar(64)"
+                    remarks="Create column for user's activity type:
+                    systemUserRegistration, systemUserConfirmRegistration, systemUserRestorePassword">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="varchar(200)" remarks="Create column for activity description">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ACTIVITY_TIME" type="timestamp" remarks="Create column for activity time">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="activity_seq"/>
+    </changeSet>
+
+</databaseChangeLog>

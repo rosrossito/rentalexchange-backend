@@ -4,7 +4,9 @@ import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
 import com.upteam.auth.domain.ActivationLink;
+import com.upteam.auth.domain.Activity;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.domain.domainenum.ActivityType;
 import com.upteam.auth.domain.domainenum.LinkType;
 import com.upteam.auth.exception.EmailIsAbsentException;
 import com.upteam.auth.exception.InvalidRequestException;
@@ -12,6 +14,7 @@ import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.domain.domainenum.SystemUserStatus;
 import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
+import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
@@ -26,6 +29,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.anyString;
@@ -53,6 +57,8 @@ public class AuthServiceImplTest {
     private EmailSender mockEmailSender;
     @Mock
     private Environment mockEnv;
+    @Mock
+    private ActivityRepository mockActivityRepository;
 
     @InjectMocks
     private AuthServiceImpl authService = new AuthServiceImpl();
@@ -98,6 +104,44 @@ public class AuthServiceImplTest {
     }
 
     //TODO - add positive scenario
+    @Test
+    public void positiveRegistrationScenario() {
+
+        RegistrationRequestVO request = new RegistrationRequestVO();
+        request.setEmail(TEST_EMAIL);
+        SystemUser systemUser = new SystemUser();
+        systemUser.setEmail(TEST_EMAIL);
+        systemUser.setPassword(TEST_PASSWORD);
+        systemUser.setStatus(SystemUserStatus.temporary);
+        mockSystemUserRepository.save(systemUser);
+
+        UUID uuidGenerator = UUID.randomUUID();
+        String uuid = uuidGenerator.toString();
+        LocalDateTime toDateTime = LocalDateTime.now();
+
+        ActivationLink activationLink = new ActivationLink();
+        activationLink.setEffectiveDate(toDateTime);
+        activationLink.setUuid(uuid);
+        activationLink.setType(LinkType.confirmRegistration);
+        activationLink.setSystemuserId(systemUser.getId());
+        mockActivationLinkRepository.save(activationLink);
+
+        String registrationConfirmLink = mockEnv.getProperty("ui.host") + ":" + mockEnv.getProperty("ui.port") + "/user/registration-confirm/?uuid=" + uuid;
+        EmailGenerator emailGeneratorRegistration =
+                new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
+        mockEmailSender.sendEmail(emailGeneratorRegistration);
+
+        Activity activity = new Activity();
+        activity.setSystemUserId(systemUser.getId());
+        activity.setActivityType(ActivityType.systemUserRegistration);
+        activity.setDescription("Registration user");
+        activity.setActivityTime(LocalDateTime.now());
+        mockActivityRepository.save(activity);
+
+        authService.registration(request);
+        when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
+        verify(mockSystemUserRepository).searchByEmail(anyString());
+    }
 
 
     //public void login(LoginRequestVO request)-------------------------------------------------------------------------
