@@ -5,7 +5,14 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="27122015-04" author="vnikolaev">
+
+
+    <changeSet id="23012016-05" author="vnikolaev">
+
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from table activity</sqlCheck>
+        </preConditions>
+
         <comment>Create table for store user activity</comment>
         <createTable tableName="activity">
             <column name="ID" type="bigint" remarks="Create column for activity Id">

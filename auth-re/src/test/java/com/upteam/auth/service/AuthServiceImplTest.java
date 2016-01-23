@@ -140,7 +140,14 @@ public class AuthServiceImplTest {
 
         authService.registration(request);
         when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
+        when(mockSystemUserRepository.save(systemUser)).thenReturn(systemUser);
+        when(mockActivationLinkRepository.save(activationLink)).thenReturn(activationLink);
+        when(mockActivationLinkRepository.getLinkBySystemUserID(TEST_ID)).thenReturn(activationLink);
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(activationLink);
+        when(mockActivityRepository.save(activity)).thenReturn(activity);
+        when(mockEnv.getProperty(anyString())).thenReturn("property-value");
         verify(mockSystemUserRepository).searchByEmail(anyString());
+        verify(mockEmailSender).sendEmail(emailGeneratorRegistration);
     }
 
 
