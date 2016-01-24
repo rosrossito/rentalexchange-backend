@@ -3,19 +3,18 @@ package com.upteam.auth.service;
 import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
+import com.upteam.auth.component.emailgenerator.EmailGeneratorRestorePasswordRequest;
 import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.Activity;
 import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.domain.domainenum.ActivityType;
 import com.upteam.auth.domain.domainenum.LinkType;
-import com.upteam.auth.exception.EmailIsAbsentException;
-import com.upteam.auth.exception.InvalidRequestException;
-import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.domain.domainenum.SystemUserStatus;
 import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
+import com.upteam.auth.vo.ChangePasswordRequestVO;
 import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
@@ -32,9 +31,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by olegls2000 on 12/23/2015.
@@ -217,8 +214,6 @@ public class AuthServiceImplTest {
         when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
         authService.login(request);
         verify(mockSystemUserRepository).searchByEmail(anyString());
-
-
     }
 
     //public void confirmRegistration(RegistrationConfirmRequestVO request)---------------------------------------------
@@ -336,11 +331,68 @@ public class AuthServiceImplTest {
     // TESTS METHODS:
     //TODO: coverage method...
 
+    @Test
+    public void positivechangePasswordRequestScenario() {
+
+        SystemUser systemUser = new SystemUser();
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(TEST_EMAIL);
+        systemUser.setId(TEST_ID);
+
+        mockSystemUserRepository.searchByEmail(TEST_EMAIL);
+        verify(mockSystemUserRepository).searchByEmail(TEST_EMAIL);
+
+        ActivationLink activationLink = new ActivationLink();
+        mockActivationLinkRepository.getLinkBySystemUserID(TEST_ID);
+        verify(mockActivationLinkRepository).getLinkBySystemUserID(TEST_ID);
+
+        mockActivationLinkRepository.delete(activationLink.getId());
+        verify(mockActivationLinkRepository).delete(activationLink.getId());
+
+        mockActivationLinkRepository.save(activationLink);
+        verify(mockActivationLinkRepository).save(activationLink);
+
+        EmailGeneratorRestorePasswordRequest emailRestorePassword = new EmailGeneratorRestorePasswordRequest(request.getEmail(), anyString());
+        mockEmailSender.sendEmail(emailRestorePassword);
+        verify(mockEmailSender).sendEmail(emailRestorePassword);
+
+        Activity activity = new Activity();
+        mockActivityRepository.save(activity);
+        verify(mockActivationLinkRepository).save(activationLink);
+    }
+
+    @Test(expected = EmailIsAbsentException.class)
+    public void changePasswordRequestWillThrowEmailIsAbsentException() {
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(null);
+        authService.changePasswordRequest(request);
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void changePasswordRequestWillThrowInvalidRequestException() {
+        ChangePasswordRequestVO request = null;
+        authService.changePasswordRequest(request);
+    }
+
+    @Test(expected = NonActiveAccountException.class)
+    public void changePasswordRequestWillThrowNonActiveAccountExceptionByNullUser() {
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(TEST_EMAIL);
+        SystemUser systemUser = null;
+        authService.changePasswordRequest(request);
+    }
+
+    @Test(expected = NonActiveAccountException.class)
+    public void changePasswordRequestWillThrowNonActiveAccountExceptionByNonActiveUserStatus() {
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(TEST_EMAIL);
+        SystemUser systemUser = new SystemUser();
+        systemUser.setStatus(SystemUserStatus.blocked);
+        authService.changePasswordRequest(request);
+    }
 
     //public void changePassword(ChangePasswordVO request)--------------------------------------------------------------
     // TESTS METHODS:
     //TODO: coverage method...
-
-
 
 }
