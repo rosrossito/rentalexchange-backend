@@ -9,9 +9,9 @@
 
     <changeSet id="23012016-05" author="vnikolaev">
 
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">select count(*) from activity</sqlCheck>
-        </preConditions>
+        <!--<preConditions onFail="MARK_RAN">-->
+            <!--<sqlCheck expectedResult="0">select count(*) from activity</sqlCheck>-->
+        <!--</preConditions>-->
 
         <comment>Create table for store user activity</comment>
         <createTable tableName="activity">
