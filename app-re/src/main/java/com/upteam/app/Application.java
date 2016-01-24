@@ -13,7 +13,8 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @EnableAutoConfiguration
 @Import({AuthConfig.class})
-@PropertySource(value = { "classpath:application.properties" })
+@PropertySource(value = "file:${APP_HOME}/application.properties")
+//@PropertySource(value = { "classpath:application.properties" })
 public class Application {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);

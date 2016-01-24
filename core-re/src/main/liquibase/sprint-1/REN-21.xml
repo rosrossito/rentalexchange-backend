@@ -5,7 +5,12 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="29112015-01" author="opasechnik">
+    <changeSet id="29112015-02" author="opasechnik">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="systemuser" schemaName="rental"/>
+            </not>
+        </preConditions>
         <comment>Create table for store System User information</comment>
         <createTable tableName="systemuser">
             <column name="ID" type="bigint" remarks="Create column for user Id">
@@ -28,10 +33,24 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="24012016-01" author="vnikolaev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists schemaName="rental" sequenceName="systemuser_seq"/>
+            </not>
+        </preConditions>
+        <comment>Create sequence for table systemuser</comment>
         <createSequence sequenceName="systemuser_seq"/>
     </changeSet>
 
-    <changeSet id="05122015-02" author="romelchenko">
+    <changeSet id="05122015-03" author="romelchenko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="activationlink" schemaName="rental"/>
+            </not>
+        </preConditions>
         <comment>Create table for store activation history</comment>
         <createTable tableName="activationlink">
             <column name="ID" type="bigint" remarks="Create column for link Id">
@@ -55,10 +74,24 @@
                                  baseTableName="activationlink"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="24012016-02" author="vnikolaev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists schemaName="rental" sequenceName="activationlink_seq"/>
+            </not>
+        </preConditions>
+        <comment>Create sequence for table activationlink</comment>
         <createSequence sequenceName="activationlink_seq"/>
     </changeSet>
 
-    <changeSet id="17122015-01" author="kskirdov" runOnChange="true">
+    <changeSet id="17122015-02" author="kskirdov" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="effectivedate" tableName="activationlink" schemaName="rental"/>
+            </not>
+        </preConditions>
         <comment>Create table for store activation history</comment>
         <addColumn tableName="activationlink">
             <column name="effectivedate" type="timestamp">

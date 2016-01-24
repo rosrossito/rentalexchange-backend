@@ -6,13 +6,12 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-
-    <changeSet id="23012016-05" author="vnikolaev">
-
-        <!--<preConditions onFail="MARK_RAN">-->
-            <!--<sqlCheck expectedResult="0">select count(*) from activity</sqlCheck>-->
-        <!--</preConditions>-->
-
+    <changeSet id="23012016-06" author="vnikolaev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="activity" schemaName="rental"/>
+            </not>
+        </preConditions>
         <comment>Create table for store user activity</comment>
         <createTable tableName="activity">
             <column name="ID" type="bigint" remarks="Create column for activity Id">
@@ -33,6 +32,15 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="24012016-06" author="opasichnyk">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists schemaName="rental" sequenceName="activity_seq"/>
+            </not>
+        </preConditions>
+        <comment>Create sequence for table activity</comment>
         <createSequence sequenceName="activity_seq"/>
     </changeSet>
 
