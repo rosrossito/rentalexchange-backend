@@ -6,7 +6,7 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <changeSet id="23012016-05" author="vnikolaev">
+    <changeSet id="23012016-06" author="vnikolaev">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="activity" schemaName="rental"/>
