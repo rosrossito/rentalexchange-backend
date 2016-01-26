@@ -13,6 +13,7 @@ import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.*;
+import org.apache.oro.text.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.regex.*;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -183,7 +185,7 @@ public class AuthServiceImpl implements AuthService {
         LocalDateTime toDateTime = LocalDateTime.now();
 
         ActivationLink activationLinkOld = activationLinkRepository.getLinkBySystemUserID(systemUser.getId());
-        if(activationLinkOld != null) {
+        if (activationLinkOld != null) {
             activationLinkRepository.delete(activationLinkOld.getId());
         }
         ActivationLink activationLink = new ActivationLink();
@@ -215,8 +217,21 @@ public class AuthServiceImpl implements AuthService {
         if (request == null) {
             throw new InvalidRequestException();
         }
-        ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
+        //password validation
+        if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
+            throw new InvalidPasswordFormatException();
+        }
+        if (!request.getPassword().matches(".*[A-Z].*")){
+            throw new InvalidPasswordFormatException();
+        }
+        if (!request.getPassword().matches(".*[a-z].*")){
+            throw new InvalidPasswordFormatException();
+        }
+        if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")){
+            throw new InvalidPasswordFormatException();
+        }
         //link missing or wrong link type check
+        ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         if (link == null || link.getType() != LinkType.changePassword) {
             throw new InvalidChangePasswordLinkException();
         }
