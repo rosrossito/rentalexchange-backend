@@ -12,10 +12,10 @@ import org.springframework.context.annotation.PropertySource;
  * Created by opasichnyk on 11/25/2015.
  */
 @Configuration
-@EnableAutoConfiguration (exclude={DataSourceAutoConfiguration.class})
+@EnableAutoConfiguration
 @Import({AuthConfig.class})
 //@PropertySource(value = "file:${APP_HOME}/application.properties")
-//@PropertySource(value = { "classpath:application.properties" })
+//@PropertySource(value = "classpath:application-${profile}.properties")
 public class Application {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
