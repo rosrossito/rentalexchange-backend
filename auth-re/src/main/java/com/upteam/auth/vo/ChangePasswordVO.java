@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * Created by Andrew on 12.01.2016.
  */
 public class ChangePasswordVO {
-    @JsonProperty(value = "password")
+    @JsonProperty("password")
     private String password;
 
     @JsonProperty("uuid")
