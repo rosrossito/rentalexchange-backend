@@ -254,7 +254,10 @@ public class AuthServiceImpl implements AuthService {
             throw new SystemUserProblemException();
         }
         if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
-            throw new SystemUserProblemException();
+            throw new BlockedAccountException();
+        }
+        if(user.getStatus() == SystemUserStatus.temporary) {
+            throw new NonActiveAccountException();
         }
         //renewing user password
         user.setPassword(request.getPassword());
