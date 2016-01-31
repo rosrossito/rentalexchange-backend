@@ -124,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             throw new InvalidConfirmRegistrationLinkException();
         }
-        if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
+        if (user.getStatus() != SystemUserStatus.temporary) {
             throw new SystemUserProblemException();
         }
         user.setPassword(request.getPassword());
@@ -216,6 +216,12 @@ public class AuthServiceImpl implements AuthService {
     public void changePassword(ChangePasswordVO request) {
         if (request == null) {
             throw new InvalidRequestException();
+        }
+        if (request.getPassword() == null) {
+            throw new PasswordAbsentException();
+        }
+        if (request.getUuid() == null) {
+            throw new UuidAbsentException();
         }
         //password validation
         if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
