@@ -1,12 +1,14 @@
 package com.upteam.auth.vo;
 
+
+
 import org.codehaus.jackson.annotate.JsonProperty;
+
 
 /**
  * Created by Andrew on 12.01.2016.
  */
 public class ChangePasswordVO {
-
     @JsonProperty("password")
     private String password;
 

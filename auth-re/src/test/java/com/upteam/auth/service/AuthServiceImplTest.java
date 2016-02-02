@@ -3,16 +3,18 @@ package com.upteam.auth.service;
 import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
 import com.upteam.auth.component.emailgenerator.EmailGeneratorRegistration;
+import com.upteam.auth.component.emailgenerator.EmailGeneratorRestorePasswordRequest;
 import com.upteam.auth.domain.ActivationLink;
+import com.upteam.auth.domain.Activity;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.domain.domainenum.ActivityType;
 import com.upteam.auth.domain.domainenum.LinkType;
-import com.upteam.auth.exception.EmailIsAbsentException;
-import com.upteam.auth.exception.InvalidRequestException;
-import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.domain.domainenum.SystemUserStatus;
 import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
+import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
+import com.upteam.auth.vo.ChangePasswordRequestVO;
 import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
 import com.upteam.auth.vo.RegistrationRequestVO;
@@ -26,11 +28,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by olegls2000 on 12/23/2015.
@@ -53,6 +54,8 @@ public class AuthServiceImplTest {
     private EmailSender mockEmailSender;
     @Mock
     private Environment mockEnv;
+    @Mock
+    private ActivityRepository mockActivityRepository;
 
     @InjectMocks
     private AuthServiceImpl authService = new AuthServiceImpl();
@@ -61,6 +64,9 @@ public class AuthServiceImplTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
     }
+
+    //public void registration(RegistrationRequestVO request)-----------------------------------------------------------
+    // TESTS METHODS:
 
     @Test(expected = UserAlreadyExistException.class)
     public void registrationWillThrowUserAlreadyExistException() {
@@ -79,9 +85,6 @@ public class AuthServiceImplTest {
         authService.registration(request);
 
         verify(mockSystemUserRepository).searchByEmail(anyString());
-        //verify(mockSystemUserRepository).save((SystemUser)anyObject());
-        //verify(mockActivationLinkRepository).save((ActivationLink)anyObject());
-        //verify(mockEmailSender).sendEmail(emailGenerator);
     }
 
     @Test(expected = EmailIsAbsentException.class)
@@ -97,23 +100,70 @@ public class AuthServiceImplTest {
         authService.registration(request);
     }
 
+    //TODO - add positive scenario
+    @Test
+    public void positiveRegistrationScenario() {
+
+        RegistrationRequestVO request = new RegistrationRequestVO();
+        request.setEmail(TEST_EMAIL);
+        SystemUser systemUser = new SystemUser();
+        systemUser.setEmail(TEST_EMAIL);
+        systemUser.setPassword(TEST_PASSWORD);
+        systemUser.setStatus(SystemUserStatus.temporary);
+        mockSystemUserRepository.save(systemUser);
+
+        UUID uuidGenerator = UUID.randomUUID();
+        String uuid = uuidGenerator.toString();
+        LocalDateTime toDateTime = LocalDateTime.now();
+
+        ActivationLink activationLink = new ActivationLink();
+        activationLink.setEffectiveDate(toDateTime);
+        activationLink.setUuid(uuid);
+        activationLink.setType(LinkType.confirmRegistration);
+        activationLink.setSystemuserId(systemUser.getId());
+        mockActivationLinkRepository.save(activationLink);
+
+        String registrationConfirmLink = mockEnv.getProperty("ui.host") + ":" + mockEnv.getProperty("ui.port") + "/user/registration-confirm/?uuid=" + uuid;
+        EmailGenerator emailGeneratorRegistration =
+                new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
+        mockEmailSender.sendEmail(emailGeneratorRegistration);
+
+        Activity activity = new Activity();
+        activity.setSystemUserId(systemUser.getId());
+        activity.setActivityType(ActivityType.systemUserRegistration);
+        activity.setDescription("Registration user");
+        activity.setActivityTime(LocalDateTime.now());
+        mockActivityRepository.save(activity);
+
+        authService.registration(request);
+        when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
+        when(mockSystemUserRepository.save(systemUser)).thenReturn(systemUser);
+        when(mockActivationLinkRepository.save(activationLink)).thenReturn(activationLink);
+        when(mockActivationLinkRepository.getLinkBySystemUserID(TEST_ID)).thenReturn(activationLink);
+        when(mockActivationLinkRepository.getLinkByUUID(TEST_UUID)).thenReturn(activationLink);
+        when(mockActivityRepository.save(activity)).thenReturn(activity);
+        when(mockEnv.getProperty(anyString())).thenReturn("property-value");
+        verify(mockSystemUserRepository).searchByEmail(anyString());
+        verify(mockEmailSender).sendEmail(emailGeneratorRegistration);
+    }
+
+
+    //public void login(LoginRequestVO request)-------------------------------------------------------------------------
+    // TESTS METHODS:
+
     @Test(expected = EmailIsAbsentException.class)
     public void loginWillThrowEmailIsAbsentException() {
-
         LoginRequestVO request = new LoginRequestVO();
         request.setEmail(null);
         authService.login(request);
-
     }
 
     @Test(expected = IncorrectLoginException.class)
     public void loginWillThrowIncorrectLoginException() {
-
         LoginRequestVO request = new LoginRequestVO();
         request.setEmail(TEST_EMAIL);
         request.setPassword(TEST_PASSWORD);
         authService.login(request);
-
     }
 
     @Test(expected = NonActiveAccountException.class)
@@ -164,9 +214,10 @@ public class AuthServiceImplTest {
         when(mockSystemUserRepository.searchByEmail(TEST_EMAIL)).thenReturn(systemUser);
         authService.login(request);
         verify(mockSystemUserRepository).searchByEmail(anyString());
-
-
     }
+
+    //public void confirmRegistration(RegistrationConfirmRequestVO request)---------------------------------------------
+    // TESTS METHODS:
 
     @Test(expected = PasswordAbsentException.class)
     public void confirmRegistrationWillThrowPasswordAbsentException() {
@@ -275,5 +326,73 @@ public class AuthServiceImplTest {
         verify(mockSystemUserRepository.findOne(anyLong()));
 
     }
+
+    //public void changePasswordRequest(ChangePasswordRequestVO request)------------------------------------------------
+    // TESTS METHODS:
+    //TODO: coverage method...
+
+    @Test
+    public void positivechangePasswordRequestScenario() {
+
+        SystemUser systemUser = new SystemUser();
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(TEST_EMAIL);
+        systemUser.setId(TEST_ID);
+
+        mockSystemUserRepository.searchByEmail(TEST_EMAIL);
+        verify(mockSystemUserRepository).searchByEmail(TEST_EMAIL);
+
+        ActivationLink activationLink = new ActivationLink();
+        mockActivationLinkRepository.getLinkBySystemUserID(TEST_ID);
+        verify(mockActivationLinkRepository).getLinkBySystemUserID(TEST_ID);
+
+        mockActivationLinkRepository.delete(activationLink.getId());
+        verify(mockActivationLinkRepository).delete(activationLink.getId());
+
+        mockActivationLinkRepository.save(activationLink);
+        verify(mockActivationLinkRepository).save(activationLink);
+
+        EmailGeneratorRestorePasswordRequest emailRestorePassword = new EmailGeneratorRestorePasswordRequest(request.getEmail(), anyString());
+        mockEmailSender.sendEmail(emailRestorePassword);
+        verify(mockEmailSender).sendEmail(emailRestorePassword);
+
+        Activity activity = new Activity();
+        mockActivityRepository.save(activity);
+        verify(mockActivationLinkRepository).save(activationLink);
+    }
+
+    @Test(expected = EmailIsAbsentException.class)
+    public void changePasswordRequestWillThrowEmailIsAbsentException() {
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(null);
+        authService.changePasswordRequest(request);
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void changePasswordRequestWillThrowInvalidRequestException() {
+        ChangePasswordRequestVO request = null;
+        authService.changePasswordRequest(request);
+    }
+
+    @Test(expected = NonActiveAccountException.class)
+    public void changePasswordRequestWillThrowNonActiveAccountExceptionByNullUser() {
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(TEST_EMAIL);
+        SystemUser systemUser = null;
+        authService.changePasswordRequest(request);
+    }
+
+    @Test(expected = NonActiveAccountException.class)
+    public void changePasswordRequestWillThrowNonActiveAccountExceptionByNonActiveUserStatus() {
+        ChangePasswordRequestVO request = new ChangePasswordRequestVO();
+        request.setEmail(TEST_EMAIL);
+        SystemUser systemUser = new SystemUser();
+        systemUser.setStatus(SystemUserStatus.blocked);
+        authService.changePasswordRequest(request);
+    }
+
+    //public void changePassword(ChangePasswordVO request)--------------------------------------------------------------
+    // TESTS METHODS:
+    //TODO: coverage method...
 
 }

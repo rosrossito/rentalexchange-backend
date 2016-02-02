@@ -13,6 +13,7 @@ import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.*;
+import org.apache.oro.text.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.regex.*;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -122,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             throw new InvalidConfirmRegistrationLinkException();
         }
-        if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
+        if (user.getStatus() != SystemUserStatus.temporary) {
             throw new SystemUserProblemException();
         }
         user.setPassword(request.getPassword());
@@ -143,6 +145,7 @@ public class AuthServiceImpl implements AuthService {
         activityRepository.save(activity);
     }
 
+    //TODO need modify for oAuth2.0 technology
     @Override
     public void login(LoginRequestVO request) {
         if (request == null) {
@@ -182,7 +185,7 @@ public class AuthServiceImpl implements AuthService {
         LocalDateTime toDateTime = LocalDateTime.now();
 
         ActivationLink activationLinkOld = activationLinkRepository.getLinkBySystemUserID(systemUser.getId());
-        if(activationLinkOld != null) {
+        if (activationLinkOld != null) {
             activationLinkRepository.delete(activationLinkOld.getId());
         }
         ActivationLink activationLink = new ActivationLink();
@@ -214,8 +217,27 @@ public class AuthServiceImpl implements AuthService {
         if (request == null) {
             throw new InvalidRequestException();
         }
-        ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
+        if (request.getPassword() == null) {
+            throw new PasswordAbsentException();
+        }
+        if (request.getUuid() == null) {
+            throw new UuidAbsentException();
+        }
+        //password validation
+        if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
+            throw new InvalidPasswordFormatException();
+        }
+        if (!request.getPassword().matches(".*[A-Z].*")){
+            throw new InvalidPasswordFormatException();
+        }
+        if (!request.getPassword().matches(".*[a-z].*")){
+            throw new InvalidPasswordFormatException();
+        }
+        if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")){
+            throw new InvalidPasswordFormatException();
+        }
         //link missing or wrong link type check
+        ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         if (link == null || link.getType() != LinkType.changePassword) {
             throw new InvalidChangePasswordLinkException();
         }
@@ -232,7 +254,10 @@ public class AuthServiceImpl implements AuthService {
             throw new SystemUserProblemException();
         }
         if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
-            throw new SystemUserProblemException();
+            throw new BlockedAccountException();
+        }
+        if(user.getStatus() == SystemUserStatus.temporary) {
+            throw new NonActiveAccountException();
         }
         //renewing user password
         user.setPassword(request.getPassword());

@@ -13,7 +13,9 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @EnableAutoConfiguration
 @Import({AuthConfig.class})
-@PropertySource(value = { "classpath:application.properties" })
+//Default properties, for overlap use next command for start application:
+// "java -jar project.jar --spring.config.location=[path]/application-[type].properties"
+@PropertySource(value = "classpath:application-develoment.properties")
 public class Application {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
