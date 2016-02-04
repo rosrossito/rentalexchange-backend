@@ -32,7 +32,7 @@ public class AuthIntegrationTest {
         tester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
         tester.setTearDownOperation(DatabaseOperation.NONE);
     }
-
+// DEV TEST
     @Before("")
     public void setUp() throws Exception {
         // загружаем набор с тестовыми данными
