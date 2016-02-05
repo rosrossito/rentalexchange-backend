@@ -15,7 +15,7 @@ public class SpringWebMvcInitializer extends
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[0];
+        return new Class[] {CustomWebSecurityConfigurerAdapter.class} ;
     }
 
     @Override
