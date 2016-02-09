@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
         WebConfig.class,
         ComponenConfig.class,
         EmailConfig.class,
-        PersistanceConfig.class
+        PersistanceConfig.class, SecurityConfig.class
 })
 public class AuthConfig {
 }
