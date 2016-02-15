@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.time.LocalDateTime;
 import java.util.regex.*;
@@ -275,5 +277,19 @@ public class AuthServiceImpl implements AuthService {
         activity.setActivityTime(LocalDateTime.now());
         activityRepository.save(activity);
 
+    }
+
+    @Override
+    public TestVO test() {
+        List<SystemUser> systemUsers =  systemUserRepository.findAll();
+        List<SystemUserVO> systemUserVOs = new ArrayList<SystemUserVO>();
+        for (SystemUser user: systemUsers) {
+            SystemUserVO systemUserVO = new SystemUserVO();
+            systemUserVO.setEmail(user.getEmail());
+            systemUserVOs.add(systemUserVO);
+        }
+        TestVO result = new TestVO();
+        result.setUsers(systemUserVOs);
+        return result;
     }
 }

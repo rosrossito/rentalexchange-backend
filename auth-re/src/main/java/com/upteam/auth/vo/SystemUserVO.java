@@ -14,6 +14,9 @@ public class SystemUserVO {
     @JsonProperty("login")
     private String avatar;
 
+    @JsonProperty("email")
+    private String email;
+
     public String getName() {
         return name;
     }
@@ -30,4 +33,11 @@ public class SystemUserVO {
         this.avatar = avatar;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

@@ -52,4 +52,9 @@ public class AuthController {
         authService.changePassword(request);
     }
 
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @ResponseBody
+     TestVO userLogin() {
+        return authService.test();
+    }
 }
