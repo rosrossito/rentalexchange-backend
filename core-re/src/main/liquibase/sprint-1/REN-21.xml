@@ -99,4 +99,13 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="12022016-01" author="akarnaukhow" runOnChange="true">
+        <comment>Change length from 64 to 80 of column for user email</comment>
+        <modifyDataType
+                columnName="email"
+                newDataType="varchar(80)"
+                schemaName="rental"
+                tableName="systemuser"/>
+    </changeSet>
+
 </databaseChangeLog>
