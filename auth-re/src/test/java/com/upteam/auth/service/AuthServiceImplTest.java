@@ -219,14 +219,14 @@ public class AuthServiceImplTest {
     //public void confirmRegistration(RegistrationConfirmRequestVO request)---------------------------------------------
     // TESTS METHODS:
 
-    @Test(expected = PasswordAbsentException.class)
+    @Test(expected = EmptyPasswordException.class)
     public void confirmRegistrationWillThrowPasswordAbsentException() {
         RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
         request.setPassword(null);
         authService.confirmRegistration(request);
     }
 
-    @Test(expected = UuidAbsentException.class)
+    @Test(expected = EmptyUuidException.class)
     public void confirmRegistrationWillThrowUuidAbsentException() {
         RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
         request.setPassword(TEST_PASSWORD);
@@ -396,3 +396,4 @@ public class AuthServiceImplTest {
     //TODO: coverage method...
 
 }
+
