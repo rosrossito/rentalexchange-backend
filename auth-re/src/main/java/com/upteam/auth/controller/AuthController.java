@@ -21,12 +21,15 @@ public class AuthController {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    AuthService authService;
+    private AuthService authService;
 
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-    void userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
+    public RegistrationRequestVO userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
         authService.registration(request);
+        RegistrationRequestVO vo = new RegistrationRequestVO();
+        vo.setEmail("Vanya vse OK?");
+        return vo;
     }
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)
