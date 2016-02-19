@@ -1,10 +1,8 @@
-package com.upteam.auth.controller;
+package com.upteam.auth.test.controller;
 
-import com.upteam.auth.exception.InvalidChangePasswordLinkException;
-import com.upteam.auth.exception.NonActiveAccountException;
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
-import com.upteam.auth.service.AuthService;
+import com.upteam.auth.test.service.AuthService;
 import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

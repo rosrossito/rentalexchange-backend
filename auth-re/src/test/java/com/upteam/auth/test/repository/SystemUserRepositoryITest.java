@@ -1,13 +1,11 @@
-package com.upteam.auth.integrationtest;
+package com.upteam.auth.test.repository;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.upteam.auth.ITestDBConfig;
+import com.upteam.auth.test.config.ITestDBConfig;
 import com.upteam.auth.config.PersistanceConfig;
 import com.upteam.auth.config.RepositoryConfig;
 import com.upteam.auth.domain.SystemUser;
-import com.upteam.auth.repository.SystemUserRepository;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:datasets/datasetSystemUser.xml")
-public class AuthIntegrationTest {
+public class SystemUserRepositoryITest {
 
     @Autowired
     private SystemUserRepository systemUserRepository;
