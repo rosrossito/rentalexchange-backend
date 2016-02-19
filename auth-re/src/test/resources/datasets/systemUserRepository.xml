@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dataset>
-    <ITEM id="1" checked="true" description="firstTestMail@rental.com" />
-    <ITEM id="2" checked="false" description="secondTestMail@rental.com" />
-    <ITEM id="3" checked="true" description="thirdTestMail@rental.com" />
-    <ITEM id="4" checked="false" description="fourthTestMail@rental.com" />
-</dataset>

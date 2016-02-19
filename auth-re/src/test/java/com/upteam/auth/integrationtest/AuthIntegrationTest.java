@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by olegls2000 on 12/23/2015 and added by ros on 02/10/16.
  */
-@Ignore
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ITestDBConfig.class, RepositoryConfig.class, PersistanceConfig.class})
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
@@ -41,6 +41,9 @@ public class AuthIntegrationTest {
     public void testExample() {
         SystemUser searchResults = systemUserRepository.searchByEmail("");
         assertThat(searchResults).isEqualTo(null);
+        searchResults = systemUserRepository.searchByEmail("XXX");
+        assertThat(searchResults).isNotEqualTo(null);
+
     }
 }
 
