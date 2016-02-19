@@ -1,4 +1,4 @@
-package com.upteam.auth;
+package com.upteam.auth.test.config;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;

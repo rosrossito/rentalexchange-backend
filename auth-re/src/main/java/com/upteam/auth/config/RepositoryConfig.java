@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * Created by opasichnyk on 11/25/2015.
  */
 @Configuration
-@EnableJpaRepositories("com.upteam.auth.repository")
+@EnableJpaRepositories("com.upteam.auth.test.repository")
 public class RepositoryConfig {
 }

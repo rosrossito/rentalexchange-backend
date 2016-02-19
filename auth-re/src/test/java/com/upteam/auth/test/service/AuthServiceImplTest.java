@@ -1,4 +1,4 @@
-package com.upteam.auth.service;
+package com.upteam.auth.test.service;
 
 import com.upteam.auth.component.EmailSender;
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
@@ -11,9 +11,9 @@ import com.upteam.auth.domain.domainenum.ActivityType;
 import com.upteam.auth.domain.domainenum.LinkType;
 import com.upteam.auth.domain.domainenum.SystemUserStatus;
 import com.upteam.auth.exception.*;
-import com.upteam.auth.repository.ActivationLinkRepository;
-import com.upteam.auth.repository.ActivityRepository;
-import com.upteam.auth.repository.SystemUserRepository;
+import com.upteam.auth.test.repository.ActivationLinkRepository;
+import com.upteam.auth.test.repository.ActivityRepository;
+import com.upteam.auth.test.repository.SystemUserRepository;
 import com.upteam.auth.vo.ChangePasswordRequestVO;
 import com.upteam.auth.vo.LoginRequestVO;
 import com.upteam.auth.vo.RegistrationConfirmRequestVO;
