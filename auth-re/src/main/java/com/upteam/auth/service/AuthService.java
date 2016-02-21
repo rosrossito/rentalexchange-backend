@@ -1,4 +1,4 @@
-package com.upteam.auth.test.service;
+package com.upteam.auth.service;
 
 import com.upteam.auth.vo.*;
 

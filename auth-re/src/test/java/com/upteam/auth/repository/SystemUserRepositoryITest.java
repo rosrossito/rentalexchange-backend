@@ -1,4 +1,4 @@
-package com.upteam.auth.test.repository;
+package com.upteam.auth.repository;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
