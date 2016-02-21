@@ -1,8 +1,8 @@
-package com.upteam.auth.test.controller;
+package com.upteam.auth.controller;
 
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
-import com.upteam.auth.test.service.AuthService;
+import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

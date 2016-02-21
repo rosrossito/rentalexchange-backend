@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Configuration;
  * Created by opasichnyk on 11/25/2015.
  */
 @Configuration
-@ComponentScan(basePackages = "com.upteam.auth.test.controller")
+@ComponentScan(basePackages = "com.upteam.auth.controller")
 public class WebConfig {
 }

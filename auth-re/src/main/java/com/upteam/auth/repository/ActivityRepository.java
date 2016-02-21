@@ -1,4 +1,4 @@
-package com.upteam.auth.test.repository;
+package com.upteam.auth.repository;
 
 import com.upteam.auth.domain.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;

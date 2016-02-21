@@ -1,4 +1,4 @@
-package com.upteam.auth.test.controller;
+package com.upteam.auth.controller;
 
 import com.upteam.auth.exception.*;
 import com.upteam.auth.vo.ErrorResponseValueObject;
