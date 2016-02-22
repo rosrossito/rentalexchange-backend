@@ -2,8 +2,6 @@ package com.upteam.auth.service;
 
 import com.upteam.auth.vo.*;
 
-import java.util.List;
-
 /**
  * Created by opasichnyk on 11/25/2015.
  */

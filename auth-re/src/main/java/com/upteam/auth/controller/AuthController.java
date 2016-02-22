@@ -55,7 +55,7 @@ public class AuthController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ResponseBody
-     TestVO userLogin() {
+    TestVO userLogin() {
         return authService.test();
     }
 }
