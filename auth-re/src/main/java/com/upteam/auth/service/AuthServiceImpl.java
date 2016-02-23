@@ -277,9 +277,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TestVO test() {
-        List<SystemUser> systemUsers =  systemUserRepository.findAll();
+        List<SystemUser> systemUsers = systemUserRepository.findAll();
         List<SystemUserVO> systemUserVOs = new ArrayList<SystemUserVO>();
-        for (SystemUser user: systemUsers) {
+        for (SystemUser user : systemUsers) {
             SystemUserVO systemUserVO = new SystemUserVO();
             systemUserVO.setEmail(user.getEmail());
             systemUserVOs.add(systemUserVO);
