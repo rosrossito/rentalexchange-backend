@@ -2,6 +2,11 @@ package com.upteam.auth.vo;
 
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Pattern;
+
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -9,9 +14,13 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class RegistrationConfirmRequestVO {
 
     @JsonProperty("password")
+    @NotEmpty(message = "EmptyPassword")
+    @Length(min = 8, max = 20, message = "InvalidPasswordLength")
+    @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"№;%:?*]))", message = "InvalidPasswordFormat")
     private String password;
 
     @JsonProperty("uuid")
+    @NotEmpty(message = "EmptyUuid")
     private String uuid;
 
     public String getPassword() {

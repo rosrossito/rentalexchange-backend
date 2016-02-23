@@ -4,18 +4,26 @@ import com.upteam.auth.exception.*;
 import com.upteam.auth.vo.ErrorResponseValueObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Locale;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
@@ -104,4 +112,22 @@ public class ExceptionHandlerController {
         return getErrorVO(e);
     }
 
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject processValidationError(MethodArgumentNotValidException ex) {
+        BindingResult result = ex.getBindingResult();
+        List<FieldError> fieldErrors = result.getFieldErrors();
+        FieldError fieldError = fieldErrors.get(0);
+        ErrorResponseValueObject error = new ErrorResponseValueObject();
+        error.setReason(fieldError.getDefaultMessage());
+        error.setTimeStamp(LocalDate.now());
+        return error;
+    }
+
+
 }
+
+
+

@@ -219,20 +219,6 @@ public class AuthServiceImplTest {
     //public void confirmRegistration(RegistrationConfirmRequestVO request)---------------------------------------------
     // TESTS METHODS:
 
-    @Test(expected = EmptyPasswordException.class)
-    public void confirmRegistrationWillThrowPasswordAbsentException() {
-        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
-        request.setPassword(null);
-        authService.confirmRegistration(request);
-    }
-
-    @Test(expected = EmptyUuidException.class)
-    public void confirmRegistrationWillThrowUuidAbsentException() {
-        RegistrationConfirmRequestVO request = new RegistrationConfirmRequestVO();
-        request.setPassword(TEST_PASSWORD);
-        request.setUuid(null);
-        authService.confirmRegistration(request);
-    }
 
     @Test(expected = InvalidRequestException.class)
     public void confirmRegistrationWillThrowInvalidRequestException() {

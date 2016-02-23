@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * Created by opasichnyk on 11/25/2015.
  */
@@ -32,7 +34,7 @@ public class AuthController {
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)
     @ResponseBody
-    void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request) {
+    void userRegistrationConfirm(@Valid @RequestBody RegistrationConfirmRequestVO request) {
         authService.confirmRegistration(request);
     }
 
