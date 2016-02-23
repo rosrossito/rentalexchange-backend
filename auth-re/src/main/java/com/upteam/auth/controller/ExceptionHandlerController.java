@@ -126,6 +126,13 @@ public class ExceptionHandlerController {
         return error;
     }
 
+    @ExceptionHandler(UserAlreadyRegisteredException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject userAlreadyRegistered(UserAlreadyRegisteredException e) {
+        return getErrorVO(e);
+    }
+
 
 }
 
