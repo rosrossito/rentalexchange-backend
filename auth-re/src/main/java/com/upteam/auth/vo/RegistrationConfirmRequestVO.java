@@ -16,7 +16,7 @@ public class RegistrationConfirmRequestVO {
     @JsonProperty("password")
     @NotEmpty(message = "EmptyPassword")
     @Length(min = 8, max = 20, message = "InvalidPasswordLength")
-    @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"№;%:?*]))", message = "InvalidPasswordFormat")
+    @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$", message = "InvalidPasswordFormat")
     private String password;
 
     @JsonProperty("uuid")
