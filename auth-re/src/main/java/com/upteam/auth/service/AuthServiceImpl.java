@@ -276,4 +276,9 @@ public class AuthServiceImpl implements AuthService {
         activityRepository.save(activity);
 
     }
+
+    @Override
+    public SystemUser getUserInfo(String login) {
+        return systemUserRepository.searchByLogin(login);
+    }
 }

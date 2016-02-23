@@ -1,5 +1,6 @@
 package com.upteam.auth.service;
 
+import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.vo.*;
 
 /**
@@ -11,4 +12,5 @@ public interface AuthService {
     void login(LoginRequestVO request);
     void changePasswordRequest(ChangePasswordRequestVO request);
     void changePassword(ChangePasswordVO request);
+    SystemUser getUserInfo(String login);
 }
