@@ -1,8 +1,6 @@
 package com.upteam.auth.controller;
 
 import com.upteam.auth.domain.SystemUser;
-import com.upteam.auth.exception.InvalidChangePasswordLinkException;
-import com.upteam.auth.exception.NonActiveAccountException;
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
@@ -10,8 +8,6 @@ import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +21,7 @@ public class AuthController {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    AuthService authService;
-
-
-    @PreAuthorize("#login == authentication.name")
-    @RequestMapping(value = "/user/info", method = RequestMethod.GET, params = {"login"})
-    @ResponseBody
-    public SystemUser getUserInfo(@RequestParam(value = "login") String login) {
-        return authService.getUserInfo(login);
-    }
+    private AuthService authService;
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     public RegistrationRequestVO userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
@@ -68,7 +56,7 @@ public class AuthController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ResponseBody
-     TestVO userLogin() {
+    TestVO userLogin() {
         return authService.test();
     }
 }
