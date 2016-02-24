@@ -10,13 +10,13 @@ import java.util.List;
 public class TestVO {
 
     @JsonProperty("users")
-    private List<SystemUserVO> users;
+    private List<UserInfoVO> users;
 
-    public List<SystemUserVO> getUsers() {
+    public List<UserInfoVO> getUsers() {
         return users;
     }
 
-    public void setUsers(List<SystemUserVO> users) {
+    public void setUsers(List<UserInfoVO> users) {
         this.users = users;
     }
 }

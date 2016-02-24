@@ -2,10 +2,10 @@ package com.upteam.auth.repository;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.upteam.auth.test.config.ITestDBConfig;
 import com.upteam.auth.config.PersistanceConfig;
 import com.upteam.auth.config.RepositoryConfig;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.test.config.ITestDBConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

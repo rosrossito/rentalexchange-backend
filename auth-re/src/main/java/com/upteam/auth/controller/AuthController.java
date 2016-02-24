@@ -1,7 +1,5 @@
 package com.upteam.auth.controller;
 
-import com.upteam.auth.exception.SystemUserProblemException;
-import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
@@ -23,38 +21,55 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-    public RegistrationRequestVO userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
+    public SuccessResponseVO userRegistration(@RequestBody RegistrationRequestVO request){
         authService.registration(request);
-        RegistrationRequestVO vo = new RegistrationRequestVO();
-        vo.setEmail("Vanya vse OK?");
-        return vo;
+        //TODO is response json mandatory? Need investigation.
+        SuccessResponseVO result = new SuccessResponseVO();
+        result.setMessage("success");
+        return result;
     }
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)
     @ResponseBody
-    void userRegistrationConfirm(@Valid @RequestBody RegistrationConfirmRequestVO request) {
+    SuccessResponseVO userRegistrationConfirm(@Valid @RequestBody RegistrationConfirmRequestVO request) {
         authService.confirmRegistration(request);
+        //TODO is response json mandatory? Need investigation.
+        SuccessResponseVO result = new SuccessResponseVO();
+        result.setMessage("success");
+        return result;
+    }
+
+    @RequestMapping(value = "/user/change-password", method = RequestMethod.POST)
+    SuccessResponseVO changePassword(@RequestBody ChangePasswordRequestVO request){
+        authService.changePasswordRequest(request);
+        //TODO is response json mandatory? Need investigation.
+        SuccessResponseVO result = new SuccessResponseVO();
+        result.setMessage("success");
+        return result;
+    }
+
+    @RequestMapping(value = "/user/change-password-confirm", method = RequestMethod.POST)
+    @ResponseBody
+    SuccessResponseVO changePasswordConfirm(@RequestBody ChangePasswordVO request) {
+        authService.changePassword(request);
+        //TODO is response json mandatory? Need investigation.
+        SuccessResponseVO result = new SuccessResponseVO();
+        result.setMessage("success");
+        return result;
     }
 
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     @ResponseBody
-    void userLogin(@RequestBody LoginRequestVO request) {
+    SuccessResponseVO userLogin(@RequestBody LoginRequestVO request) {
         authService.login(request);
+        //TODO is response json mandatory? Need investigation.
+        SuccessResponseVO result = new SuccessResponseVO();
+        result.setMessage("success");
+        return result;
     }
 
-    @RequestMapping(value = "/user/change-password/request", method = RequestMethod.POST)
-    void changePasswordRequest(@RequestBody ChangePasswordRequestVO request) throws SystemUserProblemException {
-        authService.changePasswordRequest(request);
-    }
-
-    @RequestMapping(value = "/user/change-password", method = RequestMethod.POST)
-    @ResponseBody
-    void changePassword(@RequestBody ChangePasswordVO request) {
-        authService.changePassword(request);
-    }
-
+    //TODO - test method only, should be deleted for production
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ResponseBody
     TestVO userLogin() {

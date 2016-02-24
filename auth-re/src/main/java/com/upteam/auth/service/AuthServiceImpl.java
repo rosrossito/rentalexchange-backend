@@ -8,12 +8,11 @@ import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.domain.domainenum.ActivityType;
 import com.upteam.auth.domain.domainenum.LinkType;
 import com.upteam.auth.domain.domainenum.SystemUserStatus;
+import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
-import com.upteam.auth.exception.*;
 import com.upteam.auth.vo.*;
-import org.apache.oro.text.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +26,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.time.LocalDateTime;
-import java.util.regex.*;
-
-
 
 
 /**
@@ -87,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         activationLink.setSystemuserId(systemUser.getId());
         activationLinkRepository.save(activationLink);
 
-        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/registration-confirm/?uuid=" + uuid;
+        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user-registration-confirm" + "?" + "uuid" + "=" + uuid;
         EmailGenerator emailGeneratorRegistration =
                 new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
         emailSender.sendEmail(emailGeneratorRegistration);
@@ -153,7 +148,6 @@ public class AuthServiceImpl implements AuthService {
         activityRepository.save(activity);
     }
 
-    //TODO need modify for oAuth2.0 technology
     @Override
     public void login(LoginRequestVO request) {
         if (request == null) {
@@ -235,13 +229,13 @@ public class AuthServiceImpl implements AuthService {
         if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
             throw new InvalidPasswordFormatException();
         }
-        if (!request.getPassword().matches(".*[A-Z].*")){
+        if (!request.getPassword().matches(".*[A-Z].*")) {
             throw new InvalidPasswordFormatException();
         }
-        if (!request.getPassword().matches(".*[a-z].*")){
+        if (!request.getPassword().matches(".*[a-z].*")) {
             throw new InvalidPasswordFormatException();
         }
-        if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")){
+        if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")) {
             throw new InvalidPasswordFormatException();
         }
         //link missing or wrong link type check
@@ -264,7 +258,7 @@ public class AuthServiceImpl implements AuthService {
         if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
             throw new BlockedAccountException();
         }
-        if(user.getStatus() == SystemUserStatus.temporary) {
+        if (user.getStatus() == SystemUserStatus.temporary) {
             throw new NonActiveAccountException();
         }
         //renewing user password
@@ -282,25 +276,32 @@ public class AuthServiceImpl implements AuthService {
         activity.setDescription("User password change");
         activity.setActivityTime(LocalDateTime.now());
         activityRepository.save(activity);
+    }
 
+    @Override
+    public UserInfoVO getUserInfo(String login) {
+        SystemUser systemUser = systemUserRepository.searchByLogin(login);
+        if (systemUser == null || systemUser.getStatus() != SystemUserStatus.active) {
+            throw new SystemUserProblemException();
+        }
+        UserInfoVO result = new UserInfoVO();
+        result.setEmail(systemUser.getEmail());
+        result.setAvatar(systemUser.getImage());
+        return result;
     }
 
     @Override
     public TestVO test() {
         List<SystemUser> systemUsers = systemUserRepository.findAll();
-        List<SystemUserVO> systemUserVOs = new ArrayList<SystemUserVO>();
+        List<UserInfoVO> userInfoVOs = new ArrayList<UserInfoVO>();
         for (SystemUser user : systemUsers) {
-            SystemUserVO systemUserVO = new SystemUserVO();
-            systemUserVO.setEmail(user.getEmail());
-            systemUserVOs.add(systemUserVO);
+            UserInfoVO userInfoVO = new UserInfoVO();
+            userInfoVO.setEmail(user.getEmail());
+            userInfoVOs.add(userInfoVO);
         }
         TestVO result = new TestVO();
-        result.setUsers(systemUserVOs);
+        result.setUsers(userInfoVOs);
         return result;
     }
 
-    @Override
-    public SystemUser getUserInfo(String login) {
-        return systemUserRepository.searchByLogin(login);
-    }
 }
