@@ -7,7 +7,7 @@ public class InvalidConfirmRegistrationLinkException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "InvalidConfirmRegistrationLink";
+        return "InvalidActivationLink";
     }
 
 }

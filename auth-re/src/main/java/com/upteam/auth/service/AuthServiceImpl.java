@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -28,6 +29,9 @@ import java.util.List;
 import java.util.UUID;
 import java.time.LocalDateTime;
 import java.util.regex.*;
+
+
+
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -53,16 +57,20 @@ public class AuthServiceImpl implements AuthService {
     private Environment env;
 
     @Override
+    @Transactional
     public void registration(RegistrationRequestVO request) {
         if (request == null) {
             throw new InvalidRequestException();
         }
+
         if (request.getEmail() == null) {
             throw new EmailIsAbsentException();
         }
+
         if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
             throw new UserAlreadyExistException();
         }
+
         SystemUser systemUser = new SystemUser();
         systemUser.setEmail(request.getEmail());
         systemUser.setStatus(SystemUserStatus.temporary);
@@ -96,17 +104,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void confirmRegistration(RegistrationConfirmRequestVO request) {
         if (request == null) {
             throw new InvalidRequestException();
         }
-        if (request.getPassword() == null) {
-            throw new EmptyPasswordException();
-        }
 
-        if (request.getUuid() == null) {
-            throw new EmptyUuidException();
-        }
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
 
         if (link == null || link.getType() != LinkType.confirmRegistration) {
@@ -284,9 +287,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TestVO test() {
-        List<SystemUser> systemUsers =  systemUserRepository.findAll();
+        List<SystemUser> systemUsers = systemUserRepository.findAll();
         List<SystemUserVO> systemUserVOs = new ArrayList<SystemUserVO>();
-        for (SystemUser user: systemUsers) {
+        for (SystemUser user : systemUsers) {
             SystemUserVO systemUserVO = new SystemUserVO();
             systemUserVO.setEmail(user.getEmail());
             systemUserVOs.add(systemUserVO);

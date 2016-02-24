@@ -1,6 +1,5 @@
 package com.upteam.auth.controller;
 
-import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
@@ -8,8 +7,9 @@ import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -23,6 +23,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     public RegistrationRequestVO userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
         authService.registration(request);
@@ -33,7 +34,7 @@ public class AuthController {
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)
     @ResponseBody
-    void userRegistrationConfirm(@RequestBody RegistrationConfirmRequestVO request) {
+    void userRegistrationConfirm(@Valid @RequestBody RegistrationConfirmRequestVO request) {
         authService.confirmRegistration(request);
     }
 
