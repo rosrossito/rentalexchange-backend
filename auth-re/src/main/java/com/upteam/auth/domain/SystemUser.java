@@ -1,6 +1,7 @@
 package com.upteam.auth.domain;
 
 import com.upteam.auth.domain.domainenum.SystemUserStatus;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import javax.persistence.*;
 
@@ -11,17 +12,21 @@ import javax.persistence.*;
 @Table(name = "systemuser")
 public class SystemUser {
 
+    @JsonProperty("id")
     @Id
     @SequenceGenerator(name = "systemuserseq", sequenceName = "systemuser_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "systemuserseq")
     private long id;
 
+    @JsonProperty("login")
     String login;
 
+    @JsonProperty("email")
     String email;
 
     String image;
 
+    @JsonProperty("status")
     @Enumerated(EnumType.STRING)
     private SystemUserStatus status;
 

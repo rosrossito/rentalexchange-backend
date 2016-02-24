@@ -13,6 +13,7 @@ import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
 import com.upteam.auth.vo.*;
+import org.apache.oro.text.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.regex.*;
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -229,13 +232,13 @@ public class AuthServiceImpl implements AuthService {
         if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
             throw new InvalidPasswordFormatException();
         }
-        if (!request.getPassword().matches(".*[A-Z].*")) {
+        if (!request.getPassword().matches(".*[A-Z].*")){
             throw new InvalidPasswordFormatException();
         }
-        if (!request.getPassword().matches(".*[a-z].*")) {
+        if (!request.getPassword().matches(".*[a-z].*")){
             throw new InvalidPasswordFormatException();
         }
-        if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")) {
+        if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")){
             throw new InvalidPasswordFormatException();
         }
         //link missing or wrong link type check
@@ -258,7 +261,7 @@ public class AuthServiceImpl implements AuthService {
         if (user.getStatus() == SystemUserStatus.delete || user.getStatus() == SystemUserStatus.blocked) {
             throw new BlockedAccountException();
         }
-        if (user.getStatus() == SystemUserStatus.temporary) {
+        if(user.getStatus() == SystemUserStatus.temporary) {
             throw new NonActiveAccountException();
         }
         //renewing user password
@@ -291,5 +294,10 @@ public class AuthServiceImpl implements AuthService {
         TestVO result = new TestVO();
         result.setUsers(systemUserVOs);
         return result;
+    }
+
+    @Override
+    public SystemUser getUserInfo(String login) {
+        return systemUserRepository.searchByLogin(login);
     }
 }

@@ -14,4 +14,6 @@ public interface SystemUserRepository extends JpaRepository<SystemUser, Long> {
     @Query("select u from SystemUser u where u.email = :email")
     SystemUser searchByEmail(@Param("email") String eMail);
 
+    @Query("select u from SystemUser u where u.login = :login")
+    SystemUser searchByLogin(@Param("login") String login);
 }
