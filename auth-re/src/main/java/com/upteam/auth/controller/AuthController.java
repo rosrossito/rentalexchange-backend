@@ -1,5 +1,7 @@
 package com.upteam.auth.controller;
 
+import com.upteam.auth.exception.InvalidChangePasswordLinkException;
+import com.upteam.auth.exception.NonActiveAccountException;
 import com.upteam.auth.exception.SystemUserProblemException;
 import com.upteam.auth.exception.UserAlreadyExistException;
 import com.upteam.auth.service.AuthService;
@@ -25,11 +27,11 @@ public class AuthController {
 
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-    public RegistrationRequestVO userRegistration(@RequestBody RegistrationRequestVO request) throws UserAlreadyExistException {
+    void userRegistration(@Valid @RequestBody RegistrationRequestVO request) {
         authService.registration(request);
-        RegistrationRequestVO vo = new RegistrationRequestVO();
-        vo.setEmail("Vanya vse OK?");
-        return vo;
+//        RegistrationRequestVO vo = new RegistrationRequestVO();
+//        vo.setEmail("Vanya vse OK?");
+//        return vo;
     }
 
     @RequestMapping(value = "/user/registration-confirm", method = RequestMethod.POST)

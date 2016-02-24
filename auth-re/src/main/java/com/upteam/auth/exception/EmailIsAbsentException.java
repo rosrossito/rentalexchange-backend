@@ -6,6 +6,6 @@ package com.upteam.auth.exception;
 public class EmailIsAbsentException extends RuntimeException {
     @Override
     public String getMessage() {
-        return "InvalidEmail";
+        return "EmailFieldIsEmpty";
     }
 }

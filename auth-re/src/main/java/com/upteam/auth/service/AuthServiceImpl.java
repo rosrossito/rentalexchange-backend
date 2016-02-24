@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+
+
 /**
  * Created by opasichnyk on 11/25/2015.
  */
@@ -51,16 +54,20 @@ public class AuthServiceImpl implements AuthService {
     private Environment env;
 
     @Override
+    @Transactional
     public void registration(RegistrationRequestVO request) {
         if (request == null) {
             throw new InvalidRequestException();
         }
+
         if (request.getEmail() == null) {
             throw new EmailIsAbsentException();
         }
+
         if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
             throw new UserAlreadyExistException();
         }
+
         SystemUser systemUser = new SystemUser();
         systemUser.setEmail(request.getEmail());
         systemUser.setStatus(SystemUserStatus.temporary);
