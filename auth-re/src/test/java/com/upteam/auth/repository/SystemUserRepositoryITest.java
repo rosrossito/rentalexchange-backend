@@ -2,10 +2,11 @@ package com.upteam.auth.repository;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.upteam.auth.test.config.ITestDBConfig;
 import com.upteam.auth.config.PersistanceConfig;
 import com.upteam.auth.config.RepositoryConfig;
+import com.upteam.auth.domain.ActivationLink;
 import com.upteam.auth.domain.SystemUser;
+import com.upteam.auth.test.config.ITestDBConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 /**
@@ -29,19 +30,38 @@ import static org.assertj.core.api.Assertions.assertThat;
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
-@DatabaseSetup("classpath:datasets/datasetSystemUser.xml")
+
+@DatabaseSetup(value="classpath:datasets/datasetSystemUser.xml")
 public class SystemUserRepositoryITest {
 
     @Autowired
     private SystemUserRepository systemUserRepository;
 
+    @Autowired
+    private ActivationLinkRepository activationLinkRepository;
+
     @Test
-    public void testExample() {
+    public void test1() {
         SystemUser searchResults = systemUserRepository.searchByEmail("");
         assertThat(searchResults).isEqualTo(null);
         searchResults = systemUserRepository.searchByEmail("XXX");
         assertThat(searchResults).isNotEqualTo(null);
+    }
 
+    @Test
+    public void test2() {
+        ActivationLink searchResults1 = activationLinkRepository.getLinkByUUID("");
+        assertThat(searchResults1).isEqualTo(null);
+        searchResults1 = activationLinkRepository.getLinkByUUID("XXX");
+        assertThat(searchResults1).isNotEqualTo(null);
+    }
+
+    @Test
+    public void test3() {
+        ActivationLink searchResults2 = activationLinkRepository.getLinkBySystemUserID(0l);
+        assertThat(searchResults2).isEqualTo(null);
+        searchResults2 = activationLinkRepository.getLinkBySystemUserID(11l);
+        assertThat(searchResults2).isNotEqualTo(null);
     }
 }
 

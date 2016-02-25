@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
     <SystemUser id="11" login="XXX" email="XXX" image="XXX" status="temporary" password="XXX"/>
+    <ActivationLink id="11" uuid="XXX" type="restorePassword" systemuser_id="11"/>
 </dataset>
