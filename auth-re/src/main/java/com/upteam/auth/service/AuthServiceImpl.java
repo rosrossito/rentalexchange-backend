@@ -197,7 +197,7 @@ public class AuthServiceImpl implements AuthService {
         activationLink.setType(LinkType.changePassword);
         activationLink.setSystemuserId(systemUser.getId());
 
-        String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/change-password?uuid=" + uuid;
+        String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user-change-password-confirm?uuid=" + uuid;
 
         activationLinkRepository.save(activationLink);
 
