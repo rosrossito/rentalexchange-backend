@@ -226,7 +226,8 @@ public class AuthServiceImpl implements AuthService {
             throw new EmptyUuidException();
         }
         //password validation
-        if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
+        //TODO fix validation
+     /*   if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
             throw new InvalidPasswordFormatException();
         }
         if (!request.getPassword().matches(".*[A-Z].*")) {
@@ -237,7 +238,7 @@ public class AuthServiceImpl implements AuthService {
         }
         if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")) {
             throw new InvalidPasswordFormatException();
-        }
+        }*/
         //link missing or wrong link type check
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         if (link == null || link.getType() != LinkType.changePassword) {
