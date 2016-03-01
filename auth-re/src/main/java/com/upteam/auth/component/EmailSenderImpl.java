@@ -1,6 +1,8 @@
 package com.upteam.auth.component;
 
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
+
+
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
+
 
 /**
  * Created by olegls2000 on 12/4/2015.
@@ -40,15 +43,15 @@ public class EmailSenderImpl implements EmailSender {
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
                 message.setSubject(emailGenerator.getSubject());
                 message.setTo(emailGenerator.getEmailsTo().get(0));
-                message.setFrom( env.getProperty("email.from"));
+                message.setFrom(env.getProperty("email.from"));
                 String text = VelocityEngineUtils.mergeTemplateIntoString(
                         velocityEngine, emailGenerator.getTemplate(), "UTF-8", emailGenerator.getModel());
                 message.setText(text, true);
             }
         };
         javaMailSender.send(preparator);
-        LOG.info("Email to "+emailGenerator.getEmailsTo().get(0)+
-                " with subject: "+emailGenerator.getSubject()+
+        LOG.info("Email to " + emailGenerator.getEmailsTo().get(0) +
+                " with subject: " + emailGenerator.getSubject() +
                 ". Successfully sent.");
     }
 }
