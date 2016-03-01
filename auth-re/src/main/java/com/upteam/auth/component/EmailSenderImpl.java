@@ -3,6 +3,9 @@ package com.upteam.auth.component;
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
 
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,8 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
+import java.io.StringWriter;
+import java.io.Writer;
 
 
 /**
@@ -44,9 +49,13 @@ public class EmailSenderImpl implements EmailSender {
                 message.setSubject(emailGenerator.getSubject());
                 message.setTo(emailGenerator.getEmailsTo().get(0));
                 message.setFrom(env.getProperty("email.from"));
-                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                String textMainEmailTEmplate = VelocityEngineUtils.mergeTemplateIntoString(
+                        velocityEngine, "emailtemplates/email.vm", "UTF-8", emailGenerator.getModel());
+                message.setText(textMainEmailTEmplate, true);
+
+                String textIncludeTemplate = VelocityEngineUtils.mergeTemplateIntoString(
                         velocityEngine, emailGenerator.getTemplate(), "UTF-8", emailGenerator.getModel());
-                message.setText(text, true);
+                message.setText(textIncludeTemplate, true);
             }
         };
         javaMailSender.send(preparator);
