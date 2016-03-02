@@ -46,6 +46,8 @@ public class EmailGeneratorRegistration implements EmailGenerator {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("registrationConfirmLink", registrationConfirmLink);
         model.put("userEmail", emailsTo.get(0));
+        model.put("emailSubject", getSubject());
+        model.put("emailTemplate", EMAIL_TEMPLATE);
         return model;
     }
 

@@ -3,9 +3,6 @@ package com.upteam.auth.component;
 import com.upteam.auth.component.emailgenerator.EmailGenerator;
 
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +16,6 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
-import java.io.StringWriter;
-import java.io.Writer;
 
 
 /**
