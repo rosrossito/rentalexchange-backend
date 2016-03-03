@@ -108,4 +108,225 @@
                 tableName="systemuser"/>
     </changeSet>
 
+    <changeSet id="02032016-01" author="akarnaukhow" runOnChange="true">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="goods" schemaName="rental"/>
+            </not>
+        </preConditions>
+		<comment>Creates a table for storing information about goods</comment>
+        <createTable tableName="goods">
+            <column name="ID" type="bigint" remarks="Create column for Id">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TITLE" type="varchar(255)" remarks="create column for goods title">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DESCRIPTION" type="varchar(600)" remarks="create column for goods description">
+                <constraints nullable="true"/>
+            </column>
+			<column name="SYSTEMUSER_ID" type="bigint" remarks="create column for user id">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<column name="CATEGORY_ID" type="bigint" remarks="create column for category id">
+                <constraints nullable="true" unique="true"/>
+            </column>				 					 
+            <column name="ARTICLE" type="varchar(30)" remarks="create column for goods article">
+                <constraints nullable="false"/>
+            </column>
+			<column name="PRICE" type="decimal(15,2)" remarks="create column for goods price">
+                <constraints nullable="false"/>
+            </column>
+			<column name="DEPOSIT" type="decimal(15,2)" remarks="create column for goods deposit">
+                <constraints nullable="false"/>
+            </column>
+			<column name="STATUS" type="varchar(255)" remarks="create column for goods status">
+                <constraints nullable="false"/>
+            </column>
+			<column name="CREATION_DATE" type="bigint" remarks="create column for goods creation date">
+                <constraints nullable="false"/>
+            </column>
+			<column name="PERIOD" type="varchar(255)" remarks="create column for goods period">
+                <constraints nullable="false"/>
+            </column>
+			<addForeignKeyConstraint constraintName="Goods_SystemUser_FK"
+				baseTableName="goods"
+				baseColumnNames="SYSTEMUSER_ID"
+				referencedTableName="systemuser"
+				referencedColumnNames="ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>
+			<addForeignKeyConstraint constraintName="Goods_Category_FK"
+				baseTableName="goods"
+				baseColumnNames="CATEGORY_ID"
+				referencedTableName="category"
+				referencedColumnNames="ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>	
+        </createTable>
+	</changeSet>
+	
+	<changeSet id="02032016-02" author="akarnaukhow">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists schemaName="rental" sequenceName="goods_seq"/>
+            </not>
+        </preConditions>
+        <comment>Create sequence for table goods</comment>
+        <createSequence sequenceName="goods_seq"/>
+    </changeSet>
+	
+	<changeSet id="02032016-03" author="akarnaukhow" runOnChange="true">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="category" schemaName="rental"/>
+            </not>
+        </preConditions>
+		<comment>Creates a table for storing categories</comment>
+        <createTable tableName="category">
+            <column name="ID" type="bigint" remarks="Create column for Id">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="TITLE" type="varchar(255)" remarks="create column for category title">
+                <constraints nullable="true"/>
+			</column>
+        </createTable>
+	</changeSet>
+	
+	<changeSet id="02032016-04" author="akarnaukhow">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists schemaName="rental" sequenceName="category_seq"/>
+            </not>
+        </preConditions>
+        <comment>Create sequence for table category</comment>
+        <createSequence sequenceName="category_seq"/>
+    </changeSet>
+	
+	<changeSet id="02032016-05" author="akarnaukhow" runOnChange="true">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="image" schemaName="rental"/>
+            </not>
+        </preConditions>
+		<comment>Creates a table for storing information about images</comment>
+        <createTable tableName="image">
+            <column name="ID" type="bigint" remarks="Create column for Id">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="LINK" type="varchar(300)" remarks="create column for image link">
+                <constraints nullable="true"/>
+			</column>
+			<column name="IS_MAIN" type="boolean" remarks="create column for is main condition">
+                <constraints nullable="true"/>
+			</column>
+			<column name="IS_SELECTED" type="boolean" remarks="create column for is selected condition">
+                <constraints nullable="true"/>
+			</column>
+			<column name="KEY" type="bigint" remarks="create column for key">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<column name="DTYPE" type="varchar(255)" remarks="create column for Dtype">
+                <constraints nullable="true"/>
+            </column>
+			<column name="GOODS_ID" type="bigint" remarks="create column for goods id">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<column name="GOODS_SYSTEMUSER_ID" type="bigint" remarks="create column for goods user id">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<column name="GOODS_CATEGORY_ID" type="bigint" remarks="create column for goods category id">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<addForeignKeyConstraint constraintName="Category_Goods_ID_FK"
+				baseTableName="category"
+				baseColumnNames="GOODS_ID"
+				referencedTableName="goods"
+				referencedColumnNames="ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>
+			<addForeignKeyConstraint constraintName="Category_Goods_SUID_FK"
+				baseTableName="category"
+				baseColumnNames="GOODS_SYSTEMUSER_ID"
+				referencedTableName="goods"
+				referencedColumnNames="SYSTEMUSER_ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>
+			<addForeignKeyConstraint constraintName="Category_Goods_CTGRID_FK"
+				baseTableName="category"
+				baseColumnNames="GOODS_CATEGORY_ID"
+				referencedTableName="goods"
+				referencedColumnNames="CATEGORY_ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>	
+        </createTable>
+	</changeSet>
+	
+	<changeSet id="02032016-06" author="akarnaukhow">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists schemaName="rental" sequenceName="image_seq"/>
+            </not>
+        </preConditions>
+        <comment>Create sequence for table image</comment>
+        <createSequence sequenceName="image_seq"/>
+    </changeSet>
+	
+	<changeSet id="02032016-07" author="akarnaukhow" runOnChange="true">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="statusstory" schemaName="rental"/>
+            </not>
+        </preConditions>
+		<comment>Creates a table for storing status story</comment>
+        <createTable tableName="statusstory">
+            <column name="ID" type="bigint" remarks="Create column for Id">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="EFFECTIVE_DATE" type="timestamp" remarks="create column for statusstory effective date">
+                <constraints nullable="true"/>
+			</column>
+			<column name="GOODS_ID" type="bigint" remarks="create column for goods id">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<column name="GOODS_SYSTEMUSER_ID" type="bigint" remarks="create column for goods systemuser id">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<column name="GOODS_CATEGORY_ID" type="bigint" remarks="create column for goods category id">
+                <constraints nullable="true" unique="true"/>
+            </column>
+			<addForeignKeyConstraint constraintName="StatusStory_Goods_ID_FK"
+				baseTableName="statusstory"
+				baseColumnNames="GOODS_ID"
+				referencedTableName="goods"
+				referencedColumnNames="ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>
+			<addForeignKeyConstraint constraintName="StatusStory_Goods_SUID_FK"
+				baseTableName="statusstory"
+				baseColumnNames="GOODS_SYSTEMUSER_ID"
+				referencedTableName="goods"
+				referencedColumnNames="SYSTEMUSER_ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>
+			<addForeignKeyConstraint constraintName="StatusStory_Goods_CTGRID_FK"
+				baseTableName="statusstory"
+				baseColumnNames="GOODS_CATEGORY_ID"
+				referencedTableName="goods"
+				referencedColumnNames="CATEGORY_ID"
+				onDelete="CASCADE"
+				onUpdate="RESTRICT"/>	
+        </createTable>
+	</changeSet>
+	
+	<changeSet id="02032016-08" author="akarnaukhow">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists schemaName="rental" sequenceName="statusstory_seq"/>
+            </not>
+        </preConditions>
+        <comment>Create sequence for table statusstory</comment>
+        <createSequence sequenceName="statusstory_seq"/>
+    </changeSet>
+	
 </databaseChangeLog>
