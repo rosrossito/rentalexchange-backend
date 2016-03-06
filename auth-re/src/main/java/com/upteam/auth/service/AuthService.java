@@ -12,4 +12,5 @@ public interface AuthService {
     void changePasswordRequest(ChangePasswordRequestVO request);
     void changePassword(ChangePasswordVO request);
     TestVO test();
+    UserInfoVO getUserInfo(String login);
 }

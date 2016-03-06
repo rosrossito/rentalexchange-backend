@@ -8,14 +8,14 @@ import java.util.Map;
 /**
  * Created by Andrew on 17.01.2016.
  */
-public class EmailGeneratorChangePassword implements EmailGenerator  {
+public class EmailGeneratorChangePassword implements EmailGenerator {
 
     private static final String EMAIL_TEMPLATE = "emailtemplates/change-password-confirm.vm";
     private static final String subject = "Exchange Rental. Уведомление о смене пароля.";
     private List<String> emailsTo = new ArrayList<String>();
     private String activateUserLink;
 
-    public EmailGeneratorChangePassword(String mailTo){
+    public EmailGeneratorChangePassword(String mailTo) {
         this.emailsTo.add(mailTo);
     }
 
@@ -38,6 +38,8 @@ public class EmailGeneratorChangePassword implements EmailGenerator  {
     public Map<String, Object> getModel() {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("userEmail", emailsTo.get(0));
+        model.put("emailSubject", getSubject());
+        model.put("emailTemplate", EMAIL_TEMPLATE);
         return model;
     }
 }

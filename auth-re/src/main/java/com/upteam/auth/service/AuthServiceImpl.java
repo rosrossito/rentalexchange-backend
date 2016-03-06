@@ -8,10 +8,10 @@ import com.upteam.auth.domain.SystemUser;
 import com.upteam.auth.domain.domainenum.ActivityType;
 import com.upteam.auth.domain.domainenum.LinkType;
 import com.upteam.auth.domain.domainenum.SystemUserStatus;
+import com.upteam.auth.exception.*;
 import com.upteam.auth.repository.ActivationLinkRepository;
 import com.upteam.auth.repository.ActivityRepository;
 import com.upteam.auth.repository.SystemUserRepository;
-import com.upteam.auth.exception.*;
 import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by opasichnyk on 11/25/2015.
@@ -51,16 +52,20 @@ public class AuthServiceImpl implements AuthService {
     private Environment env;
 
     @Override
+    @Transactional
     public void registration(RegistrationRequestVO request) {
         if (request == null) {
             throw new InvalidRequestException();
         }
+
         if (request.getEmail() == null) {
             throw new EmailIsAbsentException();
         }
+
         if (systemUserRepository.searchByEmail(request.getEmail()) != null) {
             throw new UserAlreadyExistException();
         }
+
         SystemUser systemUser = new SystemUser();
         systemUser.setEmail(request.getEmail());
         systemUser.setStatus(SystemUserStatus.temporary);
@@ -77,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         activationLink.setSystemuserId(systemUser.getId());
         activationLinkRepository.save(activationLink);
 
-        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/registration-confirm/?uuid=" + uuid;
+        String registrationConfirmLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user-registration-confirm" + "?" + "uuid" + "=" + uuid;
         EmailGenerator emailGeneratorRegistration =
                 new EmailGeneratorRegistration(request.getEmail(), registrationConfirmLink, systemUser);
         emailSender.sendEmail(emailGeneratorRegistration);
@@ -143,7 +148,6 @@ public class AuthServiceImpl implements AuthService {
         activityRepository.save(activity);
     }
 
-    //TODO need modify for oAuth2.0 technology
     @Override
     public void login(LoginRequestVO request) {
         if (request == null) {
@@ -193,7 +197,7 @@ public class AuthServiceImpl implements AuthService {
         activationLink.setType(LinkType.changePassword);
         activationLink.setSystemuserId(systemUser.getId());
 
-        String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user/change-password?uuid=" + uuid;
+        String restorePasswordLink = env.getProperty("ui.host") + ":" + env.getProperty("ui.port") + "/user-change-password-confirm?uuid=" + uuid;
 
         activationLinkRepository.save(activationLink);
 
@@ -222,7 +226,8 @@ public class AuthServiceImpl implements AuthService {
             throw new EmptyUuidException();
         }
         //password validation
-        if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
+        //TODO fix validation
+     /*   if (request.getPassword().length() < 8 || request.getPassword().length() > 20) {
             throw new InvalidPasswordFormatException();
         }
         if (!request.getPassword().matches(".*[A-Z].*")) {
@@ -233,7 +238,7 @@ public class AuthServiceImpl implements AuthService {
         }
         if (!request.getPassword().matches(".*[0-9].*") && !request.getPassword().matches(".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")) {
             throw new InvalidPasswordFormatException();
-        }
+        }*/
         //link missing or wrong link type check
         ActivationLink link = activationLinkRepository.getLinkByUUID(request.getUuid());
         if (link == null || link.getType() != LinkType.changePassword) {
@@ -272,20 +277,32 @@ public class AuthServiceImpl implements AuthService {
         activity.setDescription("User password change");
         activity.setActivityTime(LocalDateTime.now());
         activityRepository.save(activity);
+    }
 
+    @Override
+    public UserInfoVO getUserInfo(String login) {
+        SystemUser systemUser = systemUserRepository.searchByLogin(login);
+        if (systemUser == null || systemUser.getStatus() != SystemUserStatus.active) {
+            throw new SystemUserProblemException();
+        }
+        UserInfoVO result = new UserInfoVO();
+        result.setEmail(systemUser.getEmail());
+        result.setAvatar(systemUser.getImage());
+        return result;
     }
 
     @Override
     public TestVO test() {
-        List<SystemUser> systemUsers =  systemUserRepository.findAll();
-        List<SystemUserVO> systemUserVOs = new ArrayList<SystemUserVO>();
-        for (SystemUser user: systemUsers) {
-            SystemUserVO systemUserVO = new SystemUserVO();
-            systemUserVO.setEmail(user.getEmail());
-            systemUserVOs.add(systemUserVO);
+        List<SystemUser> systemUsers = systemUserRepository.findAll();
+        List<UserInfoVO> userInfoVOs = new ArrayList<UserInfoVO>();
+        for (SystemUser user : systemUsers) {
+            UserInfoVO userInfoVO = new UserInfoVO();
+            userInfoVO.setEmail(user.getEmail());
+            userInfoVOs.add(userInfoVO);
         }
         TestVO result = new TestVO();
-        result.setUsers(systemUserVOs);
+        result.setUsers(userInfoVOs);
         return result;
     }
+
 }

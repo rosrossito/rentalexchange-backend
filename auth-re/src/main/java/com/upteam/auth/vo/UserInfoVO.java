@@ -6,24 +6,13 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * Created by opasichnyk on 11/25/2015.
  */
-public class SystemUserVO {
-
-    @JsonProperty("login")
-    private String name;
+public class UserInfoVO {
 
     @JsonProperty("login")
     private String avatar;
 
     @JsonProperty("email")
     private String email;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getAvatar() {
         return avatar;
