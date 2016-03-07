@@ -19,7 +19,7 @@
                             <tr>
                                 <td width="32px"></td>
                                 <td style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:24px;color:#000000;line-height:1.25">
-                                   ${emailSubject}
+                                    ${emailSubject}
                                 </td>
                                 <td width="32px"></td>
                             </tr>
@@ -44,7 +44,7 @@
                                 <td>
                                     <table style="min-width:300px" border="0" cellspacing="0" cellpadding="0">
                                         <tbody>
-                                        #include(${emailTemplate})
+                                            #parse(${emailTemplate})
                                         <tr height="35px"></tr>
                                         <tr>
                                             <td>
@@ -52,7 +52,9 @@
                                                     <tbody>
                                                     <tr>
                                                         <td style="text-decoration:none;color:#afaeaa">
-                                                            <p>Если у вас возникли вопросы, пишите в <a href="mailto: exchange.rental.info@gmail.com">службу поддержки</a>
+                                                            <p>Если у вас возникли вопросы, пишите в <a
+                                                                    href="mailto: exchange.rental.info@gmail.com">службу
+                                                                поддержки</a>
                                                                 по адресу exchange.rental.info@gmail.com
                                                             </p></a>.
                                                         </td>

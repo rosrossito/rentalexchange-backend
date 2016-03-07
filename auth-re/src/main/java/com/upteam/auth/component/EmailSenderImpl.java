@@ -47,10 +47,6 @@ public class EmailSenderImpl implements EmailSender {
                 String textMainEmailTEmplate = VelocityEngineUtils.mergeTemplateIntoString(
                         velocityEngine, "emailtemplates/email.vm", "UTF-8", emailGenerator.getModel());
                 message.setText(textMainEmailTEmplate, true);
-
-                String textIncludeTemplate = VelocityEngineUtils.mergeTemplateIntoString(
-                        velocityEngine, emailGenerator.getTemplate(), "UTF-8", emailGenerator.getModel());
-                message.setText(textIncludeTemplate, true);
             }
         };
         javaMailSender.send(preparator);
