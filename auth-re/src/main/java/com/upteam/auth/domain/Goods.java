@@ -26,14 +26,14 @@ public class Goods {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "article")
+    private String article;
+
     @Column(name = "systemuser_id")
     private Long systemuserId;
 
     @Column(name = "category_id")
     private Long categoryId;
-
-    @Column(name = "article")
-    private String article;
 
     @Column(name = "price")
     private BigDecimal price;
@@ -41,16 +41,16 @@ public class Goods {
     @Column(name = "deposit")
     private BigDecimal deposit;
 
+    @Column(name = "period")
+    @Enumerated(EnumType.STRING)
+    private PeriodType periodType;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private StatusType statusType;
 
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
-
-    @Column(name = "period")
-    @Enumerated(EnumType.STRING)
-    private PeriodType periodType;
 
     public Goods() {
     }
