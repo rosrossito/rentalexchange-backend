@@ -33,15 +33,6 @@ public class Image {
     @Enumerated(EnumType.STRING)
     private Dtype dType;
 
-    @Column(name = "goods_id")
-    private Long goodsId;
-
-    @Column(name = "goods_systemuser_id")
-    private Long goodsSystemuserId;
-
-    @Column(name = "goods_category_id")
-    private Long goodsCategoryId;
-
     public Image() {
     }
 
@@ -93,27 +84,4 @@ public class Image {
         this.dType = dType;
     }
 
-    public Long getGoodsId() {
-        return goodsId;
-    }
-
-    public void setGoodsId(Long goodsId) {
-        this.goodsId = goodsId;
-    }
-
-    public Long getGoodsSystemuserId() {
-        return goodsSystemuserId;
-    }
-
-    public void setGoodsSystemuserId(Long goodsSystemuserId) {
-        this.goodsSystemuserId = goodsSystemuserId;
-    }
-
-    public Long getGoodsCategoryId() {
-        return goodsCategoryId;
-    }
-
-    public void setGoodsCategoryId(Long goodsCategoryId) {
-        this.goodsCategoryId = goodsCategoryId;
-    }
 }
