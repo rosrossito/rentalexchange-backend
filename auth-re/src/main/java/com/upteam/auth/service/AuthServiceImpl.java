@@ -219,9 +219,9 @@ public class AuthServiceImpl implements AuthService {
         if (request == null) {
             throw new InvalidRequestException();
         }
-        if (request.getPassword() == null) {
-            throw new EmptyPasswordException();
-        }
+//        if (request.getPassword() == null) {
+//            throw new EmptyPasswordException();
+//        }
         if (request.getUuid() == null) {
             throw new EmptyUuidException();
         }

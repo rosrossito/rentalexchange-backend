@@ -6,6 +6,6 @@ package com.upteam.auth.exception;
 public class EmptyPasswordException extends RuntimeException {
     @Override
     public String getMessage() {
-        return "InvalidPassword";
+        return "EmptyPassword";
     }
 }

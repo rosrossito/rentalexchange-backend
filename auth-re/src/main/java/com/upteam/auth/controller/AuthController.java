@@ -1,10 +1,14 @@
 package com.upteam.auth.controller;
 
+import com.upteam.auth.exception.EmptyPasswordException;
+import com.upteam.auth.exception.InvalidPasswordFormatException;
+import com.upteam.auth.exception.InvalidPasswordLengthException;
 import com.upteam.auth.service.AuthService;
 import com.upteam.auth.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,7 +55,11 @@ public class AuthController {
 
     @RequestMapping(value = "/user/change-password-confirm", method = RequestMethod.POST)
     @ResponseBody
-    SuccessResponseVO changePasswordConfirm(@RequestBody ChangePasswordVO request) {
+    SuccessResponseVO changePasswordConfirm(@Valid @RequestBody ChangePasswordVO request, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            if (request.getPassword().length()==0) throw new EmptyPasswordException();
+            else if (request.getPassword().length()<8 || request.getPassword().length()>20) throw new InvalidPasswordLengthException();
+            else throw new InvalidPasswordFormatException();}
         authService.changePassword(request);
         //TODO is response json mandatory? Need investigation.
         SuccessResponseVO result = new SuccessResponseVO();

@@ -102,6 +102,20 @@ public class ExceptionHandlerController {
         return getErrorVO(e);
     }
 
+    @ExceptionHandler(InvalidPasswordFormatException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject invalidPasswordFormat(InvalidPasswordFormatException e) {
+        return getErrorVO(e);
+    }
+
+    @ExceptionHandler(InvalidPasswordLengthException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponseValueObject invalidPasswordLength(InvalidPasswordLengthException e) {
+        return getErrorVO(e);
+    }
+
     @ExceptionHandler(EmptyUuidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
